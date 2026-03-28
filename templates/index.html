@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Список покупок</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --bg-card: #1c1c1e;
+      --bg-card2: #2c2c2e;
+      --bg-input: #3a3a3c;
+      --accent: #0a84ff;
+      --accent-hover: #409cff;
+      --red: #ff453a;
+      --green: #30d158;
+      --text: #ffffff;
+      --text-secondary: #8e8e93;
+      --text-tertiary: #636366;
+      --border: rgba(255,255,255,0.08);
+      --radius: 14px;
+      --radius-sm: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px 14px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      transition: background 0.3s;
+    }
+
+    .sync-dot.syncing { background: var(--accent); animation: pulse 1s infinite; }
+    .sync-dot.error   { background: var(--red); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    .btn-clear {
+      background: none;
+      border: none;
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+
+    .btn-clear:hover { background: rgba(255,69,58,0.12); }
+
+    /* MAIN */
+    main {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px 16px 0;
+    }
+
+    /* ADD FORM */
+    .add-form {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .input-name {
+      flex: 1 1 180px;
+      background: var(--bg-input);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+      transition: background 0.15s;
+      min-width: 0;
+    }
+
+    .input-name::placeholder { color: var(--text-tertiary); }
+    .input-name:focus { background: #4a4a4c; }
+
+    .input-qty {
+      width: 70px;
+      background: var(--bg-input);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 11px 10px;
+      color: var(--text);
+      font-size: 16px;
+      text-align: center;
+      outline: none;
+      transition: background 0.15s;
+    }
+
+    .input-qty:focus { background: #4a4a4c; }
+
+    .input-unit {
+      width: 80px;
+      background: var(--bg-input);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 11px 10px;
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+      transition: background 0.15s;
+    }
+
+    .input-unit::placeholder { color: var(--text-tertiary); }
+    .input-unit:focus { background: #4a4a4c; }
+
+    .btn-add {
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 11px 20px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn-add:hover  { background: var(--accent-hover); }
+    .btn-add:active { transform: scale(0.96); }
+
+    /* STATS */
+    .stats {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .stat-chip span { color: var(--text); font-weight: 600; }
+
+    /* LIST */
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin: 0 4px 8px;
+    }
+
+    #list-pending, #list-bought {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 24px;
+    }
+
+    /* ITEM */
+    .item {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 13px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid transparent;
+      transition: background 0.15s, opacity 0.2s;
+      cursor: default;
+    }
+
+    .item:first-child { border-radius: var(--radius) var(--radius) var(--radius-sm) var(--radius-sm); }
+    .item:last-child  { border-radius: var(--radius-sm) var(--radius-sm) var(--radius) var(--radius); }
+    .item:only-child  { border-radius: var(--radius); }
+
+    .item.bought { opacity: 0.45; }
+    .item:hover  { background: var(--bg-card2); }
+
+    /* Checkbox */
+    .checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--text-tertiary);
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .checkbox:hover { border-color: var(--accent); }
+
+    .item.bought .checkbox {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .checkbox svg { display: none; }
+    .item.bought .checkbox svg { display: block; }
+
+    /* Name */
+    .item-name {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 400;
+      min-width: 0;
+      word-break: break-word;
+    }
+
+    .item.bought .item-name { text-decoration: line-through; color: var(--text-secondary); }
+
+    .item-name-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--accent);
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+      width: 100%;
+      padding: 1px 2px;
+    }
+
+    /* Quantity */
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-input);
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .qty-btn:hover  { background: var(--accent); }
+    .qty-btn:active { transform: scale(0.88); }
+
+    .qty-value {
+      min-width: 26px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .item-unit {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      min-width: 24px;
+    }
+
+    /* Delete */
+    .btn-delete {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s, background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .btn-delete:hover { color: var(--red); background: rgba(255,69,58,0.12); }
+
+    /* Empty */
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-icon { font-size: 48px; margin-bottom: 10px; }
+    .empty p   { font-size: 16px; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .input-unit { width: 60px; }
+      .input-qty  { width: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <h1>🛒 Покупки</h1>
+    <div class="header-meta">
+      <div class="sync-dot" id="syncDot" title="Синхронизация"></div>
+      <button class="btn-clear" onclick="clearBought()" title="Удалить купленное">Очистить ✓</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="add-form">
+    <div class="form-row">
+      <input id="newName" class="input-name" type="text"
+             placeholder="Добавить продукт…" autocomplete="off"
+             onkeydown="if(event.key==='Enter') addItem()" />
+      <input id="newQty" class="input-qty" type="number"
+             placeholder="1" min="1" value="1" />
+      <input id="newUnit" class="input-unit" type="text"
+             placeholder="шт" autocomplete="off" />
+      <button class="btn-add" onclick="addItem()">Добавить</button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div id="pending-section">
+    <div class="section-title">Нужно купить</div>
+    <div id="list-pending"></div>
+  </div>
+
+  <div id="bought-section" style="display:none">
+    <div class="section-title">Куплено</div>
+    <div id="list-bought"></div>
+  </div>
+</main>
+
+<script>
+  let items = [];
+  let editingId = null;
+
+  const syncDot = document.getElementById('syncDot');
+
+  function setSyncing(state) {
+    syncDot.className = 'sync-dot' + (state === 'ok' ? '' : state === 'sync' ? ' syncing' : ' error');
+  }
+
+  async function fetchItems() {
+    try {
+      const res = await fetch('/api/items');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      items = data;
+      setSyncing('ok');
+      renderList();
+    } catch {
+      setSyncing('error');
+    }
+  }
+
+  function renderList() {
+    const pending = items.filter(i => !i.bought);
+    const bought  = items.filter(i => i.bought);
+
+    document.getElementById('list-pending').innerHTML = pending.length
+      ? pending.map(renderItem).join('')
+      : '<div class="empty"><div class="empty-icon">🎉</div><p>Список пуст!</p></div>';
+
+    const boughtSection = document.getElementById('bought-section');
+    if (bought.length) {
+      boughtSection.style.display = '';
+      document.getElementById('list-bought').innerHTML = bought.map(renderItem).join('');
+    } else {
+      boughtSection.style.display = 'none';
+    }
+
+    // Stats
+    const total  = items.length;
+    const doneQt = bought.length;
+    document.getElementById('stats').innerHTML = total
+      ? `<div class="stat-chip">Всего: <span>${total}</span></div>
+         <div class="stat-chip">Куплено: <span>${doneQt}</span></div>
+         <div class="stat-chip">Осталось: <span>${total - doneQt}</span></div>`
+      : '';
+  }
+
+  function renderItem(item) {
+    const isEditing = editingId === item.id;
+    const nameHtml = isEditing
+      ? `<input class="item-name-input" id="edit-${item.id}" value="${escHtml(item.name)}"
+           onblur="saveEdit(${item.id})"
+           onkeydown="if(event.key==='Enter') saveEdit(${item.id}); if(event.key==='Escape') cancelEdit()" />`
+      : `<span class="item-name" ondblclick="startEdit(${item.id})">${escHtml(item.name)}</span>`;
+
+    return `
+    <div class="item ${item.bought ? 'bought' : ''}" id="item-${item.id}">
+      <div class="checkbox" onclick="toggleBought(${item.id}, ${item.bought})">
+        <svg width="14" height="11" viewBox="0 0 14 11" fill="none">
+          <path d="M1 5.5L5 9.5L13 1.5" stroke="white" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      ${nameHtml}
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(${item.id}, ${item.quantity - 1})">−</button>
+        <span class="qty-value">${item.quantity}</span>
+        <button class="qty-btn" onclick="changeQty(${item.id}, ${item.quantity + 1})">+</button>
+      </div>
+      <span class="item-unit">${escHtml(item.unit || '')}</span>
+      <button class="btn-delete" onclick="deleteItem(${item.id})" title="Удалить">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>`;
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function startEdit(id) {
+    editingId = id;
+    renderList();
+    setTimeout(() => { const el = document.getElementById(`edit-${id}`); if(el) el.focus(); }, 10);
+  }
+
+  function cancelEdit() { editingId = null; renderList(); }
+
+  async function saveEdit(id) {
+    const el = document.getElementById(`edit-${id}`);
+    if (!el) return;
+    const name = el.value.trim();
+    if (!name) { cancelEdit(); return; }
+    editingId = null;
+    await api('PATCH', `/api/items/${id}`, { name });
+  }
+
+  async function addItem() {
+    const name = document.getElementById('newName').value.trim();
+    const qty  = parseInt(document.getElementById('newQty').value) || 1;
+    const unit = document.getElementById('newUnit').value.trim();
+    if (!name) return;
+    setSyncing('sync');
+    await api('POST', '/api/items', { name, quantity: qty, unit });
+    document.getElementById('newName').value = '';
+    document.getElementById('newQty').value  = '1';
+    document.getElementById('newUnit').value = '';
+    document.getElementById('newName').focus();
+  }
+
+  async function toggleBought(id, current) {
+    setSyncing('sync');
+    await api('PATCH', `/api/items/${id}`, { bought: !current });
+  }
+
+  async function changeQty(id, qty) {
+    if (qty < 1) return;
+    setSyncing('sync');
+    await api('PATCH', `/api/items/${id}`, { quantity: qty });
+  }
+
+  async function deleteItem(id) {
+    setSyncing('sync');
+    await api('DELETE', `/api/items/${id}`);
+  }
+
+  async function clearBought() {
+    if (!items.some(i => i.bought)) return;
+    setSyncing('sync');
+    await api('DELETE', '/api/items/clear-bought');
+  }
+
+  async function api(method, url, body) {
+    try {
+      const opts = { method, headers: {'Content-Type':'application/json'} };
+      if (body) opts.body = JSON.stringify(body);
+      await fetch(url, opts);
+      await fetchItems();
+    } catch {
+      setSyncing('error');
+    }
+  }
+
+  // Initial load + auto-refresh every 3 seconds
+  fetchItems();
+  setInterval(fetchItems, 3000);
+</script>
+</body>
+</html>
