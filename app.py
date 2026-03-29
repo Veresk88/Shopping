@@ -20,10 +20,20 @@ def init_db():
                 name TEXT NOT NULL,
                 quantity INTEGER DEFAULT 1,
                 unit TEXT DEFAULT '',
+                tag TEXT DEFAULT 'Family',
                 bought INTEGER DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        try:
+            conn.execute("ALTER TABLE items ADD COLUMN tag TEXT DEFAULT 'Family'")
+        except Exception:
+            pass
+        # Migrate old cyrillic tags to new latin values
+        conn.execute("UPDATE items SET tag='Family' WHERE tag='Общее' OR tag IS NULL OR tag=''")
+        conn.execute("UPDATE items SET tag='Y+A' WHERE tag='ЕА' OR tag='ea'")
+        conn.execute("UPDATE items SET tag='V+A' WHERE tag='ВА' OR tag='va'")
+        conn.execute("UPDATE items SET tag='Family' WHERE tag='obsh'")
         conn.commit()
 
 
@@ -47,14 +57,15 @@ def add_item():
     name = data.get("name", "").strip()
     quantity = int(data.get("quantity", 1))
     unit = data.get("unit", "").strip()
+    tag = data.get("tag", "Family").strip()
 
     if not name:
         return jsonify({"error": "Name is required"}), 400
 
     with get_db() as conn:
         cursor = conn.execute(
-            "INSERT INTO items (name, quantity, unit) VALUES (?, ?, ?)",
-            (name, quantity, unit)
+            "INSERT INTO items (name, quantity, unit, tag) VALUES (?, ?, ?, ?)",
+            (name, quantity, unit, tag)
         )
         conn.commit()
         item = conn.execute(
@@ -78,6 +89,9 @@ def update_item(item_id):
     if "unit" in data:
         fields.append("unit = ?")
         values.append(data["unit"].strip())
+    if "tag" in data:
+        fields.append("tag = ?")
+        values.append(data["tag"].strip())
     if "bought" in data:
         fields.append("bought = ?")
         values.append(1 if data["bought"] else 0)
