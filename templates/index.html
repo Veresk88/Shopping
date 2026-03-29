@@ -6,316 +6,254 @@
   <title>Список покупок</title>
   <style>
     :root {
-      --accent:        #3a7d5a;
-      --accent-light:  #4a9470;
-      --accent-dim:    rgba(58,125,90,0.12);
-      --accent-dim2:   rgba(58,125,90,0.22);
-      --red:           #d94f3d;
-      --red-dim:       rgba(217,79,61,0.1);
-      --amber:         #b07d2e;
-      --amber-dim:     rgba(176,125,46,0.13);
+      --accent:      #3a7d5a;
+      --accent-l:    #4a9470;
+      --accent-dim:  rgba(58,125,90,0.13);
+      --accent-dim2: rgba(58,125,90,0.22);
+      --red:         #d94f3d;
+      --red-dim:     rgba(217,79,61,0.10);
+      --amber:       #a07428;
+      --amber-dim:   rgba(160,116,40,0.13);
 
-      --bg-page:       #eef1ee;
-      --glass:         rgba(255,255,255,0.62);
-      --glass-hover:   rgba(255,255,255,0.82);
-      --glass-header:  rgba(238,241,238,0.78);
-      --glass-input:   rgba(255,255,255,0.55);
-      --glass-input-f: rgba(255,255,255,0.92);
-      --glass-border:  rgba(255,255,255,0.72);
-      --glass-divider: rgba(0,0,0,0.07);
+      --bg:          #eef1ee;
+      --glass:       rgba(255,255,255,0.62);
+      --glass-h:     rgba(255,255,255,0.82);
+      --glass-hdr:   rgba(238,241,238,0.80);
+      --glass-inp:   rgba(255,255,255,0.58);
+      --glass-inp-f: rgba(255,255,255,0.95);
+      --glass-brd:   rgba(255,255,255,0.74);
+      --divider:     rgba(0,0,0,0.07);
 
-      --text:   #1a2a22;
-      --text-2: #4a6057;
-      --text-3: #8aaa98;
+      --t1: #1a2a22;
+      --t2: #4a6057;
+      --t3: #90aa98;
 
-      --radius:    18px;
-      --radius-sm: 12px;
-      --shadow:    0 2px 16px rgba(40,80,60,0.10), 0 1px 3px rgba(40,80,60,0.06);
+      --r:  18px;
+      --rs: 12px;
+      --sh: 0 2px 16px rgba(40,80,60,0.10), 0 1px 3px rgba(40,80,60,0.05);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg-page);
-      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--t1);
       min-height: 100vh;
       padding-bottom: 60px;
       position: relative;
       overflow-x: hidden;
     }
 
-    /* Ambient blobs */
     body::before, body::after {
-      content: '';
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 0;
+      content:''; position:fixed; border-radius:50%;
+      filter:blur(90px); pointer-events:none; z-index:0;
     }
-    body::before {
-      width: 560px; height: 560px;
-      background: #c4dbd0;
-      top: -140px; left: -180px;
-      opacity: 0.65;
-    }
-    body::after {
-      width: 420px; height: 420px;
-      background: #d2e8da;
-      bottom: -60px; right: -120px;
-      opacity: 0.55;
-    }
+    body::before { width:560px;height:560px;background:#c4dbd0;top:-140px;left:-180px;opacity:.65; }
+    body::after  { width:420px;height:420px;background:#d2e8da;bottom:-60px;right:-120px;opacity:.55; }
 
-    /* ── HEADER ── */
+    /* HEADER */
     header {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--glass-header);
+      position:sticky; top:0; z-index:100;
+      background: var(--glass-hdr);
       backdrop-filter: blur(28px) saturate(1.6);
       -webkit-backdrop-filter: blur(28px) saturate(1.6);
-      border-bottom: 1px solid var(--glass-divider);
-      box-shadow: 0 1px 0 rgba(0,0,0,0.05), 0 4px 24px rgba(40,80,60,0.07);
-      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--divider);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.05), 0 4px 20px rgba(40,80,60,0.07);
+      padding: 16px 20px 14px;
     }
-    .header-top {
-      display: flex; align-items: center; justify-content: space-between;
-      max-width: 620px; margin: 0 auto;
-    }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    header h1 {
-      font-size: 26px; font-weight: 700;
-      letter-spacing: -0.6px; color: var(--text);
-    }
-
-    .sync-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent); transition: background 0.3s;
-    }
-    .sync-dot.syncing { background: var(--amber); animation: pulse 1s infinite; }
-    .sync-dot.error   { background: var(--red); }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
+    .hdr { display:flex; align-items:center; justify-content:space-between; max-width:640px; margin:0 auto; }
+    .hdr-left { display:flex; align-items:center; gap:10px; }
+    .sync-dot { width:8px;height:8px;border-radius:50%;background:var(--accent);transition:background .3s; flex-shrink:0; }
+    .sync-dot.syncing { background:var(--amber); animation:pulse 1s infinite; }
+    .sync-dot.error   { background:var(--red); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+    h1 { font-size:26px; font-weight:700; letter-spacing:-.6px; color:var(--t1); }
     .btn-clear {
-      background: none;
-      border: 1.5px solid rgba(217,79,61,0.28);
-      color: var(--red); font-size: 13px; font-weight: 600;
-      cursor: pointer; padding: 5px 13px; border-radius: 20px;
-      transition: background 0.15s, border-color 0.15s;
+      background:none; border:1.5px solid rgba(217,79,61,.30);
+      color:var(--red); font-size:13px; font-weight:600;
+      cursor:pointer; padding:5px 13px; border-radius:20px;
+      transition:background .15s, border-color .15s;
     }
-    .btn-clear:hover { background: var(--red-dim); border-color: rgba(217,79,61,0.5); }
+    .btn-clear:hover { background:var(--red-dim); border-color:rgba(217,79,61,.55); }
 
-    /* ── MAIN ── */
-    main {
-      position: relative; z-index: 1;
-      max-width: 620px; margin: 0 auto;
-      padding: 22px 16px 0;
-    }
+    /* MAIN */
+    main { position:relative; z-index:1; max-width:640px; margin:0 auto; padding:20px 16px 0; }
 
-    /* ── ADD FORM ── */
+    /* ADD FORM */
     .add-form {
-      background: var(--glass);
-      backdrop-filter: blur(20px) saturate(1.5);
-      -webkit-backdrop-filter: blur(20px) saturate(1.5);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      padding: 16px; margin-bottom: 20px;
-      box-shadow: var(--shadow);
+      background:var(--glass);
+      backdrop-filter:blur(20px) saturate(1.5);
+      -webkit-backdrop-filter:blur(20px) saturate(1.5);
+      border:1px solid var(--glass-brd);
+      border-radius:var(--r); padding:14px;
+      margin-bottom:18px; box-shadow:var(--sh);
     }
-    .form-row { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
-    .form-row-2 { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: nowrap; }
 
-    .input-name, .input-qty, .input-unit {
-      background: var(--glass-input);
-      border: 1px solid rgba(255,255,255,0.82);
-      border-radius: var(--radius-sm);
-      padding: 10px 12px;
-      color: var(--text); font-size: 15px;
-      outline: none;
-      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    .row1 { display:flex; gap:8px; margin-bottom:8px; }
+    .row2 { display:flex; gap:8px; }
+    .row3 { display:flex; gap:7px; margin-top:10px; }
+
+    input[type=text], input[type=number] {
+      background:var(--glass-inp);
+      border:1px solid rgba(255,255,255,.84);
+      border-radius:var(--rs);
+      padding:10px 12px; color:var(--t1); font-size:15px; outline:none;
+      transition:background .2s, border-color .2s, box-shadow .2s;
     }
-    .input-name { flex: 1 1 160px; min-width: 0; }
-    .input-qty  { width: 64px; text-align: center; }
-    .input-unit { width: 68px; }
-    .input-name::placeholder, .input-unit::placeholder { color: var(--text-3); }
-    .input-name:focus, .input-qty:focus, .input-unit:focus {
-      background: var(--glass-input-f);
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-dim);
+    input:focus {
+      background:var(--glass-inp-f);
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px var(--accent-dim);
     }
+    input::placeholder { color:var(--t3); }
+
+    #newName { flex:1; min-width:0; }
+    #newQty  { width:64px; text-align:center; }
+    #newUnit { width:68px; }
 
     .btn-add {
-      flex: 1;
-      background: var(--accent); border: none;
-      border-radius: var(--radius-sm);
-      padding: 10px 20px; color: #fff;
-      font-size: 15px; font-weight: 600; cursor: pointer;
-      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-      white-space: nowrap;
-      box-shadow: 0 2px 10px rgba(58,125,90,0.28);
+      flex:1; background:var(--accent); border:none;
+      border-radius:var(--rs); padding:10px 16px;
+      color:#fff; font-size:15px; font-weight:600;
+      cursor:pointer; white-space:nowrap;
+      box-shadow:0 2px 10px rgba(58,125,90,.28);
+      transition:background .15s, transform .1s, box-shadow .15s;
     }
-    .btn-add:hover  { background: var(--accent-light); box-shadow: 0 4px 16px rgba(58,125,90,0.35); }
-    .btn-add:active { transform: scale(0.96); }
+    .btn-add:hover  { background:var(--accent-l); box-shadow:0 4px 16px rgba(58,125,90,.36); }
+    .btn-add:active { transform:scale(.96); }
 
-    /* Tag selector in form */
-    .tag-row { display: flex; gap: 7px; margin-top: 10px; }
-    .tag-btn {
-      flex: 1; border: 1.5px solid var(--glass-divider);
-      border-radius: 20px; padding: 6px 4px;
-      background: rgba(255,255,255,0.38); color: var(--text-2);
-      font-size: 12.5px; font-weight: 500; cursor: pointer;
-      transition: all 0.15s; text-align: center;
+    /* TAG SELECTOR */
+    .tag-sel {
+      flex:1; border:1.5px solid var(--divider);
+      border-radius:20px; padding:7px 6px;
+      background:rgba(255,255,255,.40); color:var(--t2);
+      font-size:13px; font-weight:500; cursor:pointer;
+      transition:all .15s; text-align:center;
     }
-    .tag-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-    .tag-btn.active-obsh { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.18); color: var(--text); font-weight: 700; }
-    .tag-btn.active-ea   { background: var(--accent-dim2); border-color: var(--accent); color: var(--accent); font-weight: 700; }
-    .tag-btn.active-va   { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); font-weight: 700; }
+    .tag-sel:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+    .tag-sel.sel-Family { background:rgba(0,0,0,.07); border-color:rgba(0,0,0,.20); color:var(--t1); font-weight:700; }
+    .tag-sel.sel-YA     { background:var(--accent-dim2); border-color:var(--accent); color:var(--accent); font-weight:700; }
+    .tag-sel.sel-VA     { background:var(--amber-dim); border-color:var(--amber); color:var(--amber); font-weight:700; }
 
-    /* ── FILTER BAR ── */
-    .filter-bar {
-      display: flex; gap: 7px; margin-bottom: 18px;
-      overflow-x: auto; padding-bottom: 2px;
+    /* FILTER BAR */
+    .filter-bar { display:flex; gap:7px; margin-bottom:16px; overflow-x:auto; padding-bottom:2px; }
+    .filter-bar::-webkit-scrollbar { display:none; }
+    .fchip {
+      border:1.5px solid var(--divider); border-radius:20px; padding:6px 15px;
+      background:var(--glass); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      color:var(--t2); font-size:13px; font-weight:500; cursor:pointer;
+      transition:all .15s; white-space:nowrap; flex-shrink:0;
+      box-shadow:0 1px 4px rgba(40,80,60,.06);
     }
-    .filter-bar::-webkit-scrollbar { display: none; }
-    .filter-chip {
-      border: 1.5px solid var(--glass-divider);
-      border-radius: 20px; padding: 6px 15px;
-      background: var(--glass);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      color: var(--text-2); font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: all 0.15s;
-      white-space: nowrap; flex-shrink: 0;
-      box-shadow: 0 1px 4px rgba(40,80,60,0.06);
-    }
-    .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
-    .filter-chip.active {
-      background: var(--accent); border-color: var(--accent);
-      color: #fff; box-shadow: 0 2px 10px rgba(58,125,90,0.28);
-    }
+    .fchip:hover { border-color:var(--accent); color:var(--accent); }
+    .fchip.active { background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 2px 10px rgba(58,125,90,.28); }
 
-    /* ── STATS ── */
-    .stats { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
-    .stat-chip {
-      background: var(--glass);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      border: 1px solid var(--glass-border); border-radius: 20px;
-      padding: 5px 13px; font-size: 12.5px; color: var(--text-2);
-      box-shadow: 0 1px 4px rgba(40,80,60,0.06);
+    /* STATS */
+    .stats { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+    .schip {
+      background:var(--glass); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      border:1px solid var(--glass-brd); border-radius:20px;
+      padding:5px 13px; font-size:12.5px; color:var(--t2);
+      box-shadow:0 1px 4px rgba(40,80,60,.06);
     }
-    .stat-chip span { color: var(--accent); font-weight: 700; }
+    .schip b { color:var(--accent); font-weight:700; }
 
-    /* ── SECTION TITLE ── */
-    .section-title {
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.9px; color: var(--text-3); margin: 0 4px 8px;
-    }
+    /* SECTION TITLE */
+    .sec-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.9px; color:var(--t3); margin:0 4px 8px; }
 
-    /* ── LISTS ── */
-    #list-pending, #list-bought {
-      display: flex; flex-direction: column; gap: 2px; margin-bottom: 26px;
-    }
+    /* LISTS */
+    #list-pending, #list-bought { display:flex; flex-direction:column; gap:2px; margin-bottom:24px; }
 
-    /* ── ITEM ── */
+    /* ITEM */
     .item {
-      background: var(--glass);
-      backdrop-filter: blur(16px) saturate(1.4);
-      -webkit-backdrop-filter: blur(16px) saturate(1.4);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      display: flex; align-items: center; gap: 11px;
-      transition: background 0.15s, box-shadow 0.15s, opacity 0.25s;
-      cursor: default;
-      box-shadow: 0 1px 6px rgba(40,80,60,0.07);
+      background:var(--glass);
+      backdrop-filter:blur(16px) saturate(1.4);
+      -webkit-backdrop-filter:blur(16px) saturate(1.4);
+      border:1px solid var(--glass-brd); border-radius:var(--rs);
+      padding:12px 14px; display:flex; align-items:center; gap:10px;
+      box-shadow:0 1px 6px rgba(40,80,60,.07);
+      transition:background .15s, box-shadow .15s, opacity .25s;
     }
-    .item:first-child { border-radius: var(--radius) var(--radius) var(--radius-sm) var(--radius-sm); }
-    .item:last-child  { border-radius: var(--radius-sm) var(--radius-sm) var(--radius) var(--radius); }
-    .item:only-child  { border-radius: var(--radius); }
-    .item.bought { opacity: 0.48; }
-    .item:hover  { background: var(--glass-hover); box-shadow: 0 3px 14px rgba(40,80,60,0.11); }
+    .item:first-child { border-radius:var(--r) var(--r) var(--rs) var(--rs); }
+    .item:last-child  { border-radius:var(--rs) var(--rs) var(--r) var(--r); }
+    .item:only-child  { border-radius:var(--r); }
+    .item.bought { opacity:.46; }
+    .item:hover  { background:var(--glass-h); box-shadow:0 3px 14px rgba(40,80,60,.11); }
 
     /* Checkbox */
-    .checkbox {
-      width: 23px; height: 23px; border-radius: 50%;
-      border: 2px solid var(--text-3); flex-shrink: 0;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-      background: rgba(255,255,255,0.5);
+    .cb {
+      width:23px; height:23px; border-radius:50%;
+      border:2px solid var(--t3); flex-shrink:0; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(255,255,255,.52);
+      transition:border-color .15s, background .15s, box-shadow .15s;
     }
-    .checkbox:hover { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
-    .item.bought .checkbox { background: var(--accent); border-color: var(--accent); box-shadow: 0 2px 8px rgba(58,125,90,0.3); }
-    .checkbox svg { display: none; }
-    .item.bought .checkbox svg { display: block; }
+    .cb:hover { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+    .item.bought .cb { background:var(--accent); border-color:var(--accent); box-shadow:0 2px 8px rgba(58,125,90,.32); }
+    .cb svg { display:none; }
+    .item.bought .cb svg { display:block; }
 
     /* Name */
-    .item-name {
-      flex: 1; font-size: 15.5px; font-weight: 400;
-      color: var(--text); min-width: 0; word-break: break-word;
+    .iname {
+      flex:1; font-size:15.5px; font-weight:400; color:var(--t1); min-width:0; word-break:break-word;
     }
-    .item.bought .item-name { text-decoration: line-through; color: var(--text-3); }
-    .item-name-input {
-      background: transparent; border: none;
-      border-bottom: 1.5px solid var(--accent);
-      color: var(--text); font-size: 15.5px; outline: none;
-      width: 100%; padding: 1px 2px;
+    .item.bought .iname { text-decoration:line-through; color:var(--t3); }
+    .iname-inp {
+      background:transparent; border:none; border-bottom:1.5px solid var(--accent);
+      color:var(--t1); font-size:15.5px; outline:none; width:100%; padding:1px 2px;
     }
-
-    /* Quantity */
-    .qty-control { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
-    .qty-btn {
-      width: 26px; height: 26px; border-radius: 50%;
-      border: 1.5px solid var(--glass-divider);
-      background: rgba(255,255,255,0.58); color: var(--text-2);
-      font-size: 17px; line-height: 1; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
-    }
-    .qty-btn:hover  { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .qty-btn:active { transform: scale(0.88); }
-    .qty-value {
-      min-width: 24px; text-align: center;
-      font-size: 14px; font-weight: 600; color: var(--text-2);
-    }
-    .item-unit { font-size: 12px; color: var(--text-3); min-width: 20px; font-weight: 500; }
 
     /* Tag badge */
-    .item-tag {
-      font-size: 10.5px; font-weight: 700; padding: 2px 8px;
-      border-radius: 10px; flex-shrink: 0; letter-spacing: 0.3px;
-      cursor: pointer; transition: opacity 0.15s;
-      border: 1.5px solid transparent;
+    .ibadge {
+      font-size:11px; font-weight:700; padding:2px 9px; border-radius:10px;
+      flex-shrink:0; letter-spacing:.2px; cursor:pointer;
+      border:1.5px solid transparent; transition:opacity .15s;
     }
-    .item-tag:hover { opacity: 0.65; }
-    .item-tag-obsh { background: rgba(0,0,0,0.06); color: var(--text-2); border-color: rgba(0,0,0,0.1); }
-    .item-tag-ea   { background: var(--accent-dim); color: var(--accent); border-color: rgba(58,125,90,0.25); }
-    .item-tag-va   { background: var(--amber-dim); color: var(--amber); border-color: rgba(176,125,46,0.25); }
+    .ibadge:hover { opacity:.65; }
+    .ibadge.tag-Family { background:rgba(0,0,0,.06); color:var(--t2); border-color:rgba(0,0,0,.10); }
+    .ibadge.tag-YA     { background:var(--accent-dim); color:var(--accent); border-color:rgba(58,125,90,.25); }
+    .ibadge.tag-VA     { background:var(--amber-dim); color:var(--amber); border-color:rgba(160,116,40,.25); }
+
+    /* Qty */
+    .qty { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+    .qbtn {
+      width:26px; height:26px; border-radius:50%;
+      border:1.5px solid var(--divider);
+      background:rgba(255,255,255,.60); color:var(--t2);
+      font-size:17px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:background .15s, border-color .15s, color .15s, transform .1s;
+    }
+    .qbtn:hover  { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .qbtn:active { transform:scale(.88); }
+    .qval { min-width:22px; text-align:center; font-size:14px; font-weight:600; color:var(--t2); }
+    .iunit { font-size:12px; color:var(--t3); min-width:18px; font-weight:500; }
 
     /* Delete */
-    .btn-delete {
-      background: none; border: none; color: var(--text-3);
-      cursor: pointer; padding: 4px; border-radius: 8px;
-      display: flex; align-items: center;
-      transition: color 0.15s, background 0.15s; flex-shrink: 0;
+    .del {
+      background:none; border:none; color:var(--t3); cursor:pointer;
+      padding:4px; border-radius:8px; display:flex; align-items:center;
+      transition:color .15s, background .15s; flex-shrink:0;
     }
-    .btn-delete:hover { color: var(--red); background: var(--red-dim); }
+    .del:hover { color:var(--red); background:var(--red-dim); }
 
     /* Empty */
-    .empty { text-align: center; padding: 36px 20px; color: var(--text-3); }
-    .empty-icon { font-size: 44px; margin-bottom: 10px; }
-    .empty p { font-size: 15px; }
+    .empty { text-align:center; padding:36px 20px; color:var(--t3); }
+    .empty-icon { font-size:44px; margin-bottom:10px; }
 
-    @media (max-width: 480px) {
-      .input-unit { width: 54px; }
-      .input-qty  { width: 54px; }
-      .btn-add    { padding: 10px 13px; }
+    @media (max-width:480px) {
+      #newUnit { width:52px; }
+      #newQty  { width:54px; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="header-top">
-    <div class="header-left">
-      <div class="sync-dot" id="syncDot"></div>
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="sync-dot" id="sd"></div>
       <h1>🛒 Покупки</h1>
     </div>
     <button class="btn-clear" onclick="clearBought()">Очистить ✓</button>
@@ -324,172 +262,170 @@
 
 <main>
   <div class="add-form">
-    <div class="form-row">
-      <input id="newName" class="input-name" type="text"
-             placeholder="Добавить продукт…" autocomplete="off"
-             onkeydown="if(event.key==='Enter') addItem()" />
+    <div class="row1">
+      <input id="newName" type="text" placeholder="Добавить продукт…" autocomplete="off"
+             onkeydown="if(event.key==='Enter')addItem()" />
     </div>
-    <div class="form-row-2">
-      <input id="newQty"  class="input-qty"  type="number" placeholder="1" min="1" value="1" />
-      <input id="newUnit" class="input-unit" type="text" placeholder="шт" autocomplete="off" />
+    <div class="row2">
+      <input id="newQty"  type="number" placeholder="1" min="1" value="1" />
+      <input id="newUnit" type="text" placeholder="шт" autocomplete="off" />
       <button class="btn-add" onclick="addItem()">Добавить</button>
     </div>
-    <div class="tag-row">
-      <button class="tag-btn active-obsh" data-tag="obsh" onclick="selectFormTag('obsh')">Общее</button>
-      <button class="tag-btn" data-tag="ea" onclick="selectFormTag('ea')">Е + А</button>
-      <button class="tag-btn" data-tag="va" onclick="selectFormTag('va')">В + А</button>
+    <div class="row3">
+      <button class="tag-sel sel-Family" data-tag="Family" onclick="selTag('Family')">Family</button>
+      <button class="tag-sel" data-tag="YA" onclick="selTag('YA')">Y + A</button>
+      <button class="tag-sel" data-tag="VA" onclick="selTag('VA')">V + A</button>
     </div>
   </div>
 
   <div class="filter-bar">
-    <button class="filter-chip active" data-filter="all"   onclick="setFilter('all')">Все</button>
-    <button class="filter-chip"        data-filter="obsh"  onclick="setFilter('obsh')">Общее</button>
-    <button class="filter-chip"        data-filter="ea"    onclick="setFilter('ea')">Е + А</button>
-    <button class="filter-chip"        data-filter="va"    onclick="setFilter('va')">В + А</button>
+    <button class="fchip active" data-f="all"    onclick="setF('all')">Все</button>
+    <button class="fchip"        data-f="Family" onclick="setF('Family')">Family</button>
+    <button class="fchip"        data-f="YA"     onclick="setF('YA')">Y + A</button>
+    <button class="fchip"        data-f="VA"     onclick="setF('VA')">V + A</button>
   </div>
 
   <div class="stats" id="stats"></div>
 
-  <div id="pending-section">
-    <div class="section-title">Нужно купить</div>
+  <div id="ps">
+    <div class="sec-title">Нужно купить</div>
     <div id="list-pending"></div>
   </div>
-  <div id="bought-section" style="display:none">
-    <div class="section-title">Куплено</div>
+  <div id="bs" style="display:none">
+    <div class="sec-title">Куплено</div>
     <div id="list-bought"></div>
   </div>
 </main>
 
 <script>
-  let items = [], editingId = null, activeFilter = 'all', formTag = 'obsh';
-  const syncDot = document.getElementById('syncDot');
+  var items=[], editId=null, activeF='all', formTag='Family';
+  var sd=document.getElementById('sd');
 
-  function setSyncing(s) {
-    syncDot.className = 'sync-dot' + (s==='ok'?'':s==='sync'?' syncing':' error');
+  function sync(s){ sd.className='sync-dot'+(s==='ok'?'':s==='sync'?' syncing':' error'); }
+
+  function selTag(t){
+    formTag=t;
+    document.querySelectorAll('.tag-sel').forEach(function(b){
+      b.className='tag-sel'+(b.dataset.tag===t?' sel-'+t:'');
+    });
   }
 
-  function selectFormTag(tag) {
-    formTag = tag;
-    document.querySelectorAll('.tag-btn').forEach(b =>
-      b.className = 'tag-btn' + (b.dataset.tag === tag ? ' active-'+tag : '')
-    );
+  function setF(f){
+    activeF=f;
+    document.querySelectorAll('.fchip').forEach(function(b){
+      b.classList.toggle('active', b.dataset.f===f);
+    });
+    render();
   }
 
-  function setFilter(f) {
-    activeFilter = f;
-    document.querySelectorAll('.filter-chip').forEach(b =>
-      b.classList.toggle('active', b.dataset.filter === f)
-    );
-    renderList();
+  async function load(){
+    try{
+      var r=await fetch('/api/items');
+      if(!r.ok)throw 0;
+      items=await r.json();
+      sync('ok'); render();
+    }catch(e){ sync('error'); }
   }
 
-  async function fetchItems() {
-    try {
-      const r = await fetch('/api/items');
-      if (!r.ok) throw 0;
-      items = await r.json();
-      setSyncing('ok'); renderList();
-    } catch { setSyncing('error'); }
+  var LABELS={'Family':'Family','YA':'Y+A','VA':'V+A'};
+  var TAGS=['Family','YA','VA'];
+
+  function normTag(t){
+    if(!t||t==='Общее'||t==='obsh')return 'Family';
+    if(t==='ЕА'||t==='ea')return 'YA';
+    if(t==='ВА'||t==='va')return 'VA';
+    return t;
   }
 
-  function renderList() {
-    const fil = activeFilter==='all' ? items : items.filter(i=>(i.tag||'obsh')===activeFilter);
-    const pending = fil.filter(i=>!i.bought);
-    const bought  = fil.filter(i=>i.bought);
+  function render(){
+    var fil=activeF==='all'?items:items.filter(function(i){return normTag(i.tag)===activeF;});
+    var pend=fil.filter(function(i){return !i.bought;});
+    var bght=fil.filter(function(i){return i.bought;});
 
-    document.getElementById('list-pending').innerHTML = pending.length
-      ? pending.map(renderItem).join('')
-      : '<div class="empty"><div class="empty-icon">🌿</div><p>Список пуст!</p></div>';
+    document.getElementById('list-pending').innerHTML=
+      pend.length ? pend.map(renderItem).join('') :
+      '<div class="empty"><div class="empty-icon">🌿</div><p>Список пуст!</p></div>';
 
-    const bs = document.getElementById('bought-section');
-    if (bought.length) {
-      bs.style.display='';
-      document.getElementById('list-bought').innerHTML=bought.map(renderItem).join('');
-    } else { bs.style.display='none'; }
+    var bs=document.getElementById('bs');
+    if(bght.length){ bs.style.display=''; document.getElementById('list-bought').innerHTML=bght.map(renderItem).join(''); }
+    else bs.style.display='none';
 
-    const t=fil.length, d=bought.length;
-    document.getElementById('stats').innerHTML = t
-      ? `<div class="stat-chip">Всего: <span>${t}</span></div>
-         <div class="stat-chip">Куплено: <span>${d}</span></div>
-         <div class="stat-chip">Осталось: <span>${t-d}</span></div>` : '';
+    var t=fil.length,d=bght.length;
+    document.getElementById('stats').innerHTML=t?
+      '<div class="schip">Всего: <b>'+t+'</b></div>'+
+      '<div class="schip">Куплено: <b>'+d+'</b></div>'+
+      '<div class="schip">Осталось: <b>'+(t-d)+'</b></div>':'';
   }
 
-  const TAG_LABELS = {obsh:'Общее', ea:'Е+А', va:'В+А'};
-  const TAGS = ['obsh','ea','va'];
-
-  // Migrate old cyrillic tags from DB to latin
-  function normalizeTag(t) {
-    if (!t) return 'obsh';
-    const map = {'Общее':'obsh','ЕА':'ea','ВА':'va'};
-    return map[t] || t;
-  }
-
-  function renderItem(item) {
-    const editing = editingId===item.id;
-    const nameHtml = editing
-      ? `<input class="item-name-input" id="edit-${item.id}" value="${esc(item.name)}"
-           onblur="saveEdit(${item.id})"
-           onkeydown="if(event.key==='Enter')saveEdit(${item.id});if(event.key==='Escape')cancelEdit()">`
-      : `<span class="item-name" ondblclick="startEdit(${item.id})">${esc(item.name)}</span>`;
-    const tag = normalizeTag(item.tag);
-    return `
-    <div class="item ${item.bought?'bought':''}" id="item-${item.id}">
-      <div class="checkbox" onclick="toggleBought(${item.id},${item.bought})">
-        <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
-          <path d="M1 5L4.5 8.5L12 1" stroke="white" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      ${nameHtml}
-      <span class="item-tag item-tag-${tag}" onclick="cycleTag(${item.id},'${tag}')" title="Сменить тег">${TAG_LABELS[tag]||tag}</span>
-      <div class="qty-control">
-        <button class="qty-btn" onclick="changeQty(${item.id},${item.quantity-1})">−</button>
-        <span class="qty-value">${item.quantity}</span>
-        <button class="qty-btn" onclick="changeQty(${item.id},${item.quantity+1})">+</button>
-      </div>
-      <span class="item-unit">${esc(item.unit||'')}</span>
-      <button class="btn-delete" onclick="deleteItem(${item.id})">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-        </svg>
-      </button>
-    </div>`;
+  function renderItem(item){
+    var ed=editId===item.id;
+    var tag=normTag(item.tag);
+    var nm=ed?
+      '<input class="iname-inp" id="ei'+item.id+'" value="'+esc(item.name)+'"'+
+      ' onblur="save('+item.id+')"'+
+      ' onkeydown="if(event.key===\'Enter\')save('+item.id+');if(event.key===\'Escape\')cancelEdit()">':
+      '<span class="iname" ondblclick="startEdit('+item.id+')">'+esc(item.name)+'</span>';
+    return '<div class="item'+(item.bought?' bought':'')+'" id="it'+item.id+'">'+
+      '<div class="cb" onclick="toggleB('+item.id+','+item.bought+')">'+
+      '<svg width="13" height="10" viewBox="0 0 13 10" fill="none">'+
+      '<path d="M1 5L4.5 8.5L12 1" stroke="white" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
+      nm+
+      '<span class="ibadge tag-'+tag+'" onclick="cycleTag('+item.id+',\''+tag+'\')" title="Сменить">'+LABELS[tag]+'</span>'+
+      '<div class="qty">'+
+      '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity-1)+')">−</button>'+
+      '<span class="qval">'+item.quantity+'</span>'+
+      '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity+1)+')">+</button>'+
+      '</div>'+
+      '<span class="iunit">'+esc(item.unit||'')+'</span>'+
+      '<button class="del" onclick="del('+item.id+')">'+
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none">'+
+      '<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>'+
+      '</div>';
   }
 
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function startEdit(id){editingId=id;renderList();setTimeout(()=>{const e=document.getElementById(`edit-${id}`);if(e)e.focus();},10);}
-  function cancelEdit(){editingId=null;renderList();}
-  async function saveEdit(id){
-    const e=document.getElementById(`edit-${id}`); if(!e)return;
-    const name=e.value.trim(); if(!name){cancelEdit();return;}
-    editingId=null; await api('PATCH',`/api/items/${id}`,{name});
+  function startEdit(id){editId=id;render();setTimeout(function(){var e=document.getElementById('ei'+id);if(e)e.focus();},10);}
+  function cancelEdit(){editId=null;render();}
+  async function save(id){
+    var e=document.getElementById('ei'+id); if(!e)return;
+    var n=e.value.trim(); if(!n){cancelEdit();return;}
+    editId=null; await api('PATCH','/api/items/'+id,{name:n});
   }
+
   async function addItem(){
-    const name=document.getElementById('newName').value.trim();
-    const qty=parseInt(document.getElementById('newQty').value)||1;
-    const unit=document.getElementById('newUnit').value.trim();
-    if(!name)return; setSyncing('sync');
-    await api('POST','/api/items',{name,quantity:qty,unit,tag:formTag});
+    var name=document.getElementById('newName').value.trim();
+    var qty=parseInt(document.getElementById('newQty').value)||1;
+    var unit=document.getElementById('newUnit').value.trim();
+    if(!name)return; sync('sync');
+    await api('POST','/api/items',{name:name,quantity:qty,unit:unit,tag:formTag});
     document.getElementById('newName').value='';
     document.getElementById('newQty').value='1';
     document.getElementById('newUnit').value='';
     document.getElementById('newName').focus();
   }
-  async function toggleBought(id,cur){setSyncing('sync');await api('PATCH',`/api/items/${id}`,{bought:!cur});}
-  async function changeQty(id,qty){if(qty<1)return;setSyncing('sync');await api('PATCH',`/api/items/${id}`,{quantity:qty});}
-  async function cycleTag(id,cur){const n=TAGS[(TAGS.indexOf(cur)+1)%TAGS.length];setSyncing('sync');await api('PATCH',`/api/items/${id}`,{tag:n});}
-  async function deleteItem(id){setSyncing('sync');await api('DELETE',`/api/items/${id}`);}
-  async function clearBought(){if(!items.some(i=>i.bought))return;setSyncing('sync');await api('DELETE','/api/items/clear-bought');}
+
+  async function toggleB(id,cur){sync('sync');await api('PATCH','/api/items/'+id,{bought:!cur});}
+  async function chQty(id,q){if(q<1)return;sync('sync');await api('PATCH','/api/items/'+id,{quantity:q});}
+  async function cycleTag(id,cur){
+    var n=TAGS[(TAGS.indexOf(cur)+1)%TAGS.length];
+    sync('sync'); await api('PATCH','/api/items/'+id,{tag:n});
+  }
+  async function del(id){sync('sync');await api('DELETE','/api/items/'+id);}
+  async function clearBought(){
+    if(!items.some(function(i){return i.bought;}))return;
+    sync('sync'); await api('DELETE','/api/items/clear-bought');
+  }
 
   async function api(method,url,body){
     try{
-      const o={method,headers:{'Content-Type':'application/json'}};
+      var o={method:method,headers:{'Content-Type':'application/json'}};
       if(body)o.body=JSON.stringify(body);
-      await fetch(url,o); await fetchItems();
-    }catch{setSyncing('error');}
+      await fetch(url,o); await load();
+    }catch(e){sync('error');}
   }
 
-  fetchItems();
-  setInterval(fetchItems,3000);
+  load();
+  setInterval(load,3000);
 </script>
 </body>
 </html>
