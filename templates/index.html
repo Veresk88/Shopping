@@ -764,34 +764,36 @@ function openTagPopup(e, itemId){
   tpTags=(item.tags||['Family']).slice();
   renderTpRows();
 
-  // Show popup first to measure its height
+  // Measure popup size first
   tagPopup.style.visibility='hidden';
-  tagPopup.style.display='flex';
+  tagPopup.style.top='-9999px';
+  tagPopup.style.left='-9999px';
+  tagPopup.classList.add('open');
 
-  var popupH=tagPopup.offsetHeight||140;
+  var popupH=tagPopup.offsetHeight||130;
   var popupW=tagPopup.offsetWidth||170;
   var rect=e.target.getBoundingClientRect();
   var viewH=window.innerHeight;
   var viewW=window.innerWidth;
 
-  // Horizontal: align to badge left, clamp to viewport
+  // Horizontal: align to badge, clamp
   var x=rect.left;
   if(x+popupW>viewW-8) x=viewW-popupW-8;
   if(x<8) x=8;
 
-  // Vertical: show below badge if enough room, else show above
-  var spaceBelow=viewH-(rect.bottom+8);
+  // Vertical: below badge if room, else above — all viewport coords (fixed)
+  var spaceBelow=viewH-rect.bottom-8;
   var y;
   if(spaceBelow>=popupH){
-    y=rect.bottom+window.scrollY+6;
+    y=rect.bottom+6;
   } else {
-    y=rect.top+window.scrollY-popupH-6;
+    y=rect.top-popupH-6;
+    if(y<8) y=8;
   }
 
   tagPopup.style.left=x+'px';
   tagPopup.style.top=y+'px';
   tagPopup.style.visibility='visible';
-  tagPopup.classList.add('open');
 }
 
 function renderTpRows(){
