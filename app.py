@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, render_template
 import sqlite3
+import json
 import os
 
 app = Flask(__name__)
@@ -12,6 +13,32 @@ def get_db():
     return conn
 
 
+def parse_tags(raw):
+    """Always return a list of tag strings."""
+    if not raw:
+        return ["Family"]
+    if raw.startswith("["):
+        try:
+            tags = json.loads(raw)
+            return tags if isinstance(tags, list) and tags else ["Family"]
+        except Exception:
+            pass
+    # Legacy single-tag migration
+    mapping = {
+        "Общее": "Family", "obsh": "Family",
+        "ЕА": "YA", "ea": "YA", "Y+A": "YA",
+        "ВА": "VA", "va": "VA", "V+A": "VA",
+    }
+    val = mapping.get(raw, raw)
+    return [val]
+
+
+def item_to_dict(row):
+    d = dict(row)
+    d["tags"] = parse_tags(d.get("tag", ""))
+    return d
+
+
 def init_db():
     with get_db() as conn:
         conn.execute("""
@@ -20,20 +47,15 @@ def init_db():
                 name TEXT NOT NULL,
                 quantity INTEGER DEFAULT 1,
                 unit TEXT DEFAULT '',
-                tag TEXT DEFAULT 'Family',
+                tag TEXT DEFAULT '["Family"]',
                 bought INTEGER DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
         try:
-            conn.execute("ALTER TABLE items ADD COLUMN tag TEXT DEFAULT 'Family'")
+            conn.execute('ALTER TABLE items ADD COLUMN tag TEXT DEFAULT \'["Family"]\'')
         except Exception:
             pass
-        # Migrate old cyrillic tags to new latin values
-        conn.execute("UPDATE items SET tag='Family' WHERE tag='Общее' OR tag IS NULL OR tag=''")
-        conn.execute("UPDATE items SET tag='Y+A' WHERE tag='ЕА' OR tag='ea'")
-        conn.execute("UPDATE items SET tag='V+A' WHERE tag='ВА' OR tag='va'")
-        conn.execute("UPDATE items SET tag='Family' WHERE tag='obsh'")
         conn.commit()
 
 
@@ -45,10 +67,10 @@ def index():
 @app.route("/api/items", methods=["GET"])
 def get_items():
     with get_db() as conn:
-        items = conn.execute(
+        rows = conn.execute(
             "SELECT * FROM items ORDER BY bought ASC, created_at DESC"
         ).fetchall()
-        return jsonify([dict(i) for i in items])
+        return jsonify([item_to_dict(r) for r in rows])
 
 
 @app.route("/api/items", methods=["POST"])
@@ -57,7 +79,10 @@ def add_item():
     name = data.get("name", "").strip()
     quantity = int(data.get("quantity", 1))
     unit = data.get("unit", "").strip()
-    tag = data.get("tag", "Family").strip()
+    tags = data.get("tags", ["Family"])
+    if not isinstance(tags, list) or not tags:
+        tags = ["Family"]
+    tag_json = json.dumps(tags)
 
     if not name:
         return jsonify({"error": "Name is required"}), 400
@@ -65,20 +90,17 @@ def add_item():
     with get_db() as conn:
         cursor = conn.execute(
             "INSERT INTO items (name, quantity, unit, tag) VALUES (?, ?, ?, ?)",
-            (name, quantity, unit, tag)
+            (name, quantity, unit, tag_json)
         )
         conn.commit()
-        item = conn.execute(
-            "SELECT * FROM items WHERE id = ?", (cursor.lastrowid,)
-        ).fetchone()
-        return jsonify(dict(item)), 201
+        row = conn.execute("SELECT * FROM items WHERE id = ?", (cursor.lastrowid,)).fetchone()
+        return jsonify(item_to_dict(row)), 201
 
 
 @app.route("/api/items/<int:item_id>", methods=["PATCH"])
 def update_item(item_id):
     data = request.json
-    fields = []
-    values = []
+    fields, values = [], []
 
     if "name" in data:
         fields.append("name = ?")
@@ -89,9 +111,12 @@ def update_item(item_id):
     if "unit" in data:
         fields.append("unit = ?")
         values.append(data["unit"].strip())
-    if "tag" in data:
+    if "tags" in data:
+        tags = data["tags"]
+        if not isinstance(tags, list) or not tags:
+            tags = ["Family"]
         fields.append("tag = ?")
-        values.append(data["tag"].strip())
+        values.append(json.dumps(tags))
     if "bought" in data:
         fields.append("bought = ?")
         values.append(1 if data["bought"] else 0)
@@ -101,16 +126,12 @@ def update_item(item_id):
 
     values.append(item_id)
     with get_db() as conn:
-        conn.execute(
-            f"UPDATE items SET {', '.join(fields)} WHERE id = ?", values
-        )
+        conn.execute(f"UPDATE items SET {', '.join(fields)} WHERE id = ?", values)
         conn.commit()
-        item = conn.execute(
-            "SELECT * FROM items WHERE id = ?", (item_id,)
-        ).fetchone()
-        if not item:
+        row = conn.execute("SELECT * FROM items WHERE id = ?", (item_id,)).fetchone()
+        if not row:
             return jsonify({"error": "Not found"}), 404
-        return jsonify(dict(item))
+        return jsonify(item_to_dict(row))
 
 
 @app.route("/api/items/<int:item_id>", methods=["DELETE"])
