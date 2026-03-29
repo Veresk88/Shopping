@@ -12,6 +12,9 @@
       --accent-dim2: rgba(58,125,90,0.22);
       --red:         #d94f3d;
       --red-dim:     rgba(217,79,61,0.10);
+      --purple:      #7c5cbf;
+      --purple-dim:  rgba(124,92,191,0.13);
+      --purple-dim2: rgba(124,92,191,0.22);
       --amber:       #a07428;
       --amber-dim:   rgba(160,116,40,0.13);
 
@@ -129,7 +132,7 @@
       transition:all .15s; text-align:center; user-select:none;
     }
     .tag-toggle:hover { border-color:rgba(0,0,0,.25);color:var(--t1);background:rgba(0,0,0,.05); }
-    .tag-toggle.on-Family { background:rgba(0,0,0,.07);border-color:rgba(0,0,0,.22);color:var(--t1);font-weight:700; }
+    .tag-toggle.on-Family { background:var(--purple-dim2);border-color:var(--purple);color:var(--purple);font-weight:700; }
     .tag-toggle.on-YA     { background:var(--accent-dim2);border-color:var(--accent);color:var(--accent);font-weight:700; }
     .tag-toggle.on-VA     { background:var(--amber-dim);border-color:var(--amber);color:var(--amber);font-weight:700; }
 
@@ -186,8 +189,11 @@
       background:rgba(255,255,255,.6); color:var(--t2);
       font-size:12.5px; font-weight:500; cursor:pointer; transition:all .15s;
     }
-    .mf-chip:hover { border-color:var(--accent);color:var(--accent); }
-    .mf-chip.active { background:var(--accent);border-color:var(--accent);color:#fff; }
+    .mf-chip:hover { border-color:rgba(0,0,0,.25);color:var(--t1); }
+    .mf-chip.active          { background:var(--accent);border-color:var(--accent);color:#fff; }
+    .mf-chip.active-family   { background:var(--purple);border-color:var(--purple);color:#fff; }
+    .mf-chip.active-ya       { background:var(--accent);border-color:var(--accent);color:#fff; }
+    .mf-chip.active-va       { background:var(--amber);border-color:var(--amber);color:#fff; }
 
     /* Preset category */
     .preset-cat { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin:14px 0 6px 4px; }
@@ -244,8 +250,11 @@
       transition:all .15s; white-space:nowrap; flex-shrink:0;
       box-shadow:0 1px 4px rgba(40,80,60,.06);
     }
-    .fchip:hover { border-color:var(--accent);color:var(--accent); }
-    .fchip.active { background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 10px rgba(58,125,90,.28); }
+    .fchip:hover { border-color:rgba(0,0,0,.25);color:var(--t1); }
+    .fchip.active          { background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 10px rgba(58,125,90,.28); }
+    .fchip.active-family   { background:var(--purple);border-color:var(--purple);color:#fff;box-shadow:0 2px 10px rgba(124,92,191,.28); }
+    .fchip.active-ya       { background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 10px rgba(58,125,90,.28); }
+    .fchip.active-va       { background:var(--amber);border-color:var(--amber);color:#fff;box-shadow:0 2px 10px rgba(160,116,40,.28); }
 
     /* STATS */
     .stats { display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap; }
@@ -305,7 +314,7 @@
       transition:all .15s;white-space:nowrap;
     }
     .ibadge:hover { opacity:.7; }
-    .ibadge.tag-Family { background:rgba(0,0,0,.06);color:var(--t2);border-color:rgba(0,0,0,.10); }
+    .ibadge.tag-Family { background:var(--purple-dim);color:var(--purple);border-color:rgba(124,92,191,.25); }
     .ibadge.tag-YA     { background:var(--accent-dim);color:var(--accent);border-color:rgba(58,125,90,.25); }
     .ibadge.tag-VA     { background:var(--amber-dim);color:var(--amber);border-color:rgba(160,116,40,.25); }
 
@@ -330,7 +339,7 @@
       width:18px;height:18px;border-radius:50%;border:2px solid var(--t3);flex-shrink:0;
       display:flex;align-items:center;justify-content:center;transition:all .15s;
     }
-    .tp-row.on-Family .tp-check { background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.25); }
+    .tp-row.on-Family .tp-check { background:var(--purple);border-color:var(--purple); }
     .tp-row.on-YA     .tp-check { background:var(--accent);border-color:var(--accent); }
     .tp-row.on-VA     .tp-check { background:var(--amber);border-color:var(--amber); }
     .tp-check-inner { display:none; }
@@ -667,7 +676,15 @@ function renderFormTags(){
 // ── Filter ─────────────────────────────────────────────
 function setF(f){
   activeF=f;
-  document.querySelectorAll('.fchip').forEach(function(b){ b.classList.toggle('active',b.dataset.f===f); });
+  document.querySelectorAll('.fchip').forEach(function(b){
+    b.classList.remove('active','active-family','active-ya','active-va');
+    if(b.dataset.f===f){
+      if(f==='Family') b.classList.add('active-family');
+      else if(f==='YA') b.classList.add('active-ya');
+      else if(f==='VA') b.classList.add('active-va');
+      else b.classList.add('active');
+    }
+  });
   render();
 }
 
@@ -789,8 +806,15 @@ function maybeClosePreset(e){ if(e.target===document.getElementById('presetOverl
 
 function setMF(f){
   mfActive=f;
-  document.querySelectorAll('.mf-chip').forEach(function(b){b.classList.toggle('active',b.dataset.mf===f);});
-  // Update footer hint
+  document.querySelectorAll('.mf-chip').forEach(function(b){
+    b.classList.remove('active','active-family','active-ya','active-va');
+    if(b.dataset.mf===f){
+      if(f==='Family') b.classList.add('active-family');
+      else if(f==='YA') b.classList.add('active-ya');
+      else if(f==='VA') b.classList.add('active-va');
+      else b.classList.add('active');
+    }
+  });
   var hint=document.getElementById('presetTagHint');
   if(hint){
     if(f==='all') hint.textContent='Теги берутся из настроек каждого продукта';
