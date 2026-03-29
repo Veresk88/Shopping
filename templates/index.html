@@ -121,7 +121,8 @@
       padding: 16px; margin-bottom: 20px;
       box-shadow: var(--shadow);
     }
-    .form-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .form-row { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
+    .form-row-2 { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: nowrap; }
 
     .input-name, .input-qty, .input-unit {
       background: var(--glass-input);
@@ -143,6 +144,7 @@
     }
 
     .btn-add {
+      flex: 1;
       background: var(--accent); border: none;
       border-radius: var(--radius-sm);
       padding: 10px 20px; color: #fff;
@@ -164,9 +166,9 @@
       transition: all 0.15s; text-align: center;
     }
     .tag-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-    .tag-btn.active-Общее { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.18); color: var(--text); font-weight: 700; }
-    .tag-btn.active-ЕА   { background: var(--accent-dim2); border-color: var(--accent); color: var(--accent); font-weight: 700; }
-    .tag-btn.active-ВА   { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); font-weight: 700; }
+    .tag-btn.active-obsh { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.18); color: var(--text); font-weight: 700; }
+    .tag-btn.active-ea   { background: var(--accent-dim2); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+    .tag-btn.active-va   { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); font-weight: 700; }
 
     /* ── FILTER BAR ── */
     .filter-bar {
@@ -283,9 +285,9 @@
       border: 1.5px solid transparent;
     }
     .item-tag:hover { opacity: 0.65; }
-    .item-tag-Общее { background: rgba(0,0,0,0.06); color: var(--text-2); border-color: rgba(0,0,0,0.1); }
-    .item-tag-ЕА    { background: var(--accent-dim); color: var(--accent); border-color: rgba(58,125,90,0.25); }
-    .item-tag-ВА    { background: var(--amber-dim); color: var(--amber); border-color: rgba(176,125,46,0.25); }
+    .item-tag-obsh { background: rgba(0,0,0,0.06); color: var(--text-2); border-color: rgba(0,0,0,0.1); }
+    .item-tag-ea   { background: var(--accent-dim); color: var(--accent); border-color: rgba(58,125,90,0.25); }
+    .item-tag-va   { background: var(--amber-dim); color: var(--amber); border-color: rgba(176,125,46,0.25); }
 
     /* Delete */
     .btn-delete {
@@ -326,22 +328,24 @@
       <input id="newName" class="input-name" type="text"
              placeholder="Добавить продукт…" autocomplete="off"
              onkeydown="if(event.key==='Enter') addItem()" />
+    </div>
+    <div class="form-row-2">
       <input id="newQty"  class="input-qty"  type="number" placeholder="1" min="1" value="1" />
       <input id="newUnit" class="input-unit" type="text" placeholder="шт" autocomplete="off" />
       <button class="btn-add" onclick="addItem()">Добавить</button>
     </div>
     <div class="tag-row">
-      <button class="tag-btn active-Общее" data-tag="Общее" onclick="selectFormTag('Общее')">Общее</button>
-      <button class="tag-btn" data-tag="ЕА" onclick="selectFormTag('ЕА')">Е + А</button>
-      <button class="tag-btn" data-tag="ВА" onclick="selectFormTag('ВА')">В + А</button>
+      <button class="tag-btn active-obsh" data-tag="obsh" onclick="selectFormTag('obsh')">Общее</button>
+      <button class="tag-btn" data-tag="ea" onclick="selectFormTag('ea')">Е + А</button>
+      <button class="tag-btn" data-tag="va" onclick="selectFormTag('va')">В + А</button>
     </div>
   </div>
 
   <div class="filter-bar">
-    <button class="filter-chip active" data-filter="all"    onclick="setFilter('all')">Все</button>
-    <button class="filter-chip"        data-filter="Общее"  onclick="setFilter('Общее')">Общее</button>
-    <button class="filter-chip"        data-filter="ЕА"     onclick="setFilter('ЕА')">Е + А</button>
-    <button class="filter-chip"        data-filter="ВА"     onclick="setFilter('ВА')">В + А</button>
+    <button class="filter-chip active" data-filter="all"   onclick="setFilter('all')">Все</button>
+    <button class="filter-chip"        data-filter="obsh"  onclick="setFilter('obsh')">Общее</button>
+    <button class="filter-chip"        data-filter="ea"    onclick="setFilter('ea')">Е + А</button>
+    <button class="filter-chip"        data-filter="va"    onclick="setFilter('va')">В + А</button>
   </div>
 
   <div class="stats" id="stats"></div>
@@ -357,7 +361,7 @@
 </main>
 
 <script>
-  let items = [], editingId = null, activeFilter = 'all', formTag = 'Общее';
+  let items = [], editingId = null, activeFilter = 'all', formTag = 'obsh';
   const syncDot = document.getElementById('syncDot');
 
   function setSyncing(s) {
@@ -389,7 +393,7 @@
   }
 
   function renderList() {
-    const fil = activeFilter==='all' ? items : items.filter(i=>i.tag===activeFilter);
+    const fil = activeFilter==='all' ? items : items.filter(i=>(i.tag||'obsh')===activeFilter);
     const pending = fil.filter(i=>!i.bought);
     const bought  = fil.filter(i=>i.bought);
 
@@ -398,8 +402,10 @@
       : '<div class="empty"><div class="empty-icon">🌿</div><p>Список пуст!</p></div>';
 
     const bs = document.getElementById('bought-section');
-    if (bought.length) { bs.style.display=''; document.getElementById('list-bought').innerHTML=bought.map(renderItem).join(''); }
-    else { bs.style.display='none'; }
+    if (bought.length) {
+      bs.style.display='';
+      document.getElementById('list-bought').innerHTML=bought.map(renderItem).join('');
+    } else { bs.style.display='none'; }
 
     const t=fil.length, d=bought.length;
     document.getElementById('stats').innerHTML = t
@@ -408,8 +414,15 @@
          <div class="stat-chip">Осталось: <span>${t-d}</span></div>` : '';
   }
 
-  const TAG_LABELS = {Общее:'Общее',ЕА:'Е+А',ВА:'В+А'};
-  const TAGS = ['Общее','ЕА','ВА'];
+  const TAG_LABELS = {obsh:'Общее', ea:'Е+А', va:'В+А'};
+  const TAGS = ['obsh','ea','va'];
+
+  // Migrate old cyrillic tags from DB to latin
+  function normalizeTag(t) {
+    if (!t) return 'obsh';
+    const map = {'Общее':'obsh','ЕА':'ea','ВА':'va'};
+    return map[t] || t;
+  }
 
   function renderItem(item) {
     const editing = editingId===item.id;
@@ -418,7 +431,7 @@
            onblur="saveEdit(${item.id})"
            onkeydown="if(event.key==='Enter')saveEdit(${item.id});if(event.key==='Escape')cancelEdit()">`
       : `<span class="item-name" ondblclick="startEdit(${item.id})">${esc(item.name)}</span>`;
-    const tag = item.tag||'Общее';
+    const tag = normalizeTag(item.tag);
     return `
     <div class="item ${item.bought?'bought':''}" id="item-${item.id}">
       <div class="checkbox" onclick="toggleBought(${item.id},${item.bought})">
