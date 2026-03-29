@@ -460,6 +460,7 @@
       <div id="presetList"></div>
     </div>
     <div class="modal-footer">
+      <div id="presetTagHint" style="font-size:12px;color:var(--t3);text-align:center;margin-bottom:8px;">Теги берутся из настроек каждого продукта</div>
       <button class="btn-add-selected" id="btnAddSelected" onclick="addSelected()" disabled>Добавить выбранные</button>
     </div>
   </div>
@@ -480,66 +481,166 @@ var TAGS=['Family','YA','VA'];
 
 // ── Preset data ────────────────────────────────────────
 var PRESET=[
-  {cat:'Птица и мясо', items:[
-    {name:'Куриная грудка',       qty:'1.3 кг',  tags:['YA']},
-    {name:'Куриное бедро (без кости)', qty:'400 г', tags:['YA']},
-    {name:'Индейка (филе)',        qty:'500 г',   tags:['YA']},
-    {name:'Говядина (вырезка)',    qty:'600 г',   tags:['YA']},
+  {cat:'🍖 Мясо и птица', items:[
+    {name:'Куриная грудка',            qty:'1–2 кг',    tags:['YA','Family']},
+    {name:'Куриное филе бедра',        qty:'500 г',     tags:['YA','Family']},
+    {name:'Куриные бёдра',             qty:'1 кг',      tags:['Family']},
+    {name:'Куриные ножки',             qty:'1 кг',      tags:['Family']},
+    {name:'Куриные крылья',            qty:'500 г',     tags:['Family']},
+    {name:'Индейка (филе)',            qty:'500 г',     tags:['YA']},
+    {name:'Фарш индейки',              qty:'400–500 г', tags:['YA','Family']},
+    {name:'Говядина',                  qty:'400–600 г', tags:['YA','Family']},
+    {name:'Фарш говядины',             qty:'400–500 г', tags:['Family']},
+    {name:'Свинина',                   qty:'400 г',     tags:['Family']},
+    {name:'Фарш свиной',               qty:'400 г',     tags:['Family']},
+    {name:'Печень',                    qty:'1 кг',      tags:['Family']},
   ]},
-  {cat:'Рыба', items:[
-    {name:'Лосось (филе)',         qty:'550 г',   tags:['YA']},
-    {name:'Скумбрия',             qty:'300 г',   tags:['YA']},
-    {name:'Тунец в воде (консервы)', qty:'2 × 160 г', tags:['YA']},
+  {cat:'🐟 Рыба', items:[
+    {name:'Лосось (филе)',             qty:'4 кусочка', tags:['YA','Family']},
+    {name:'Скумбрия',                  qty:'300 г',     tags:['YA']},
+    {name:'Хек замороженный',          qty:'1 шт',      tags:['Family']},
+    {name:'Тунец в воде (консервы)',   qty:'2 × 160 г', tags:['YA']},
+    {name:'Тунец в масле (консервы)',  qty:'1 банка',   tags:['Family']},
   ]},
-  {cat:'Яйца и молочное', items:[
-    {name:'Яйца',                 qty:'28–30 шт', tags:['Family']},
-    {name:'Творог 5%',            qty:'1.5 кг',  tags:['YA']},
-    {name:'Греческий йогурт',     qty:'600 г',   tags:['YA']},
-    {name:'Кефир',                qty:'1 л',     tags:['Family']},
-    {name:'Молоко 2.5–3.2%',      qty:'2 л',     tags:['Family']},
-    {name:'Сыр твёрдый',          qty:'100 г',   tags:['Family']},
+  {cat:'🥚 Яйца и молочное', items:[
+    {name:'Яйца',                      qty:'18–30 шт',  tags:['Family']},
+    {name:'Творог 5–9%',               qty:'1–1.5 кг',  tags:['YA','Family']},
+    {name:'Греческий йогурт',          qty:'600 г',     tags:['YA']},
+    {name:'Греческий йогурт с персиком (Leios)', qty:'4 шт', tags:['Family']},
+    {name:'Кефир',                     qty:'1–2 шт',    tags:['Family']},
+    {name:'Молоко обычное',            qty:'500 мл–2 л',tags:['Family']},
+    {name:'Овсяное молоко',            qty:'1 л',       tags:['YA']},
+    {name:'Сыр твёрдый',               qty:'100–200 г', tags:['Family']},
+    {name:'Пармезан',                  qty:'50–100 г',  tags:['Family']},
+    {name:'Моцарелла',                 qty:'130–200 г', tags:['Family']},
+    {name:'Сыр тёртый',                qty:'1 упак.',   tags:['Family']},
+    {name:'Плавленый сыр',             qty:'1 шт',      tags:['Family']},
+    {name:'Сливочный сыр',             qty:'1 шт',      tags:['Family']},
+    {name:'Сливочное масло',           qty:'200 г',     tags:['Family']},
+    {name:'Сметана',                   qty:'200 г',     tags:['Family']},
+    {name:'Сливки',                    qty:'200 мл',    tags:['Family']},
   ]},
-  {cat:'Добавки', items:[
-    {name:'Whey protein',         qty:'~90 г (3×30г, дни зала)', tags:['YA']},
-    {name:'Креатин моногидрат',   qty:'35 г (5г/день)',          tags:['YA']},
+  {cat:'🥦 Овощи и зелень', items:[
+    {name:'Брокколи',                  qty:'500 г',     tags:['YA','Family']},
+    {name:'Авокадо',                   qty:'2–4 шт',    tags:['YA']},
+    {name:'Помидоры',                  qty:'600 г',     tags:['Family']},
+    {name:'Помидоры мини (сливка)',    qty:'2 шт',      tags:['Family']},
+    {name:'Томаты черри',              qty:'1 упак.',   tags:['Family']},
+    {name:'Огурец',                    qty:'1–4 шт',    tags:['Family']},
+    {name:'Перец болгарский',          qty:'3 шт',      tags:['Family']},
+    {name:'Лук репчатый',              qty:'1 кг',      tags:['Family']},
+    {name:'Лук зелёный',               qty:'1 пучок',   tags:['Family']},
+    {name:'Морковь',                   qty:'1 кг',      tags:['Family']},
+    {name:'Капуста белокочанная',      qty:'400 г',     tags:['Family']},
+    {name:'Кабачок / цукини',          qty:'1–2 шт',    tags:['Family']},
+    {name:'Картофель',                 qty:'1–2 кг',    tags:['Family']},
+    {name:'Батат (сладкий картофель)', qty:'1.2 кг',    tags:['YA']},
+    {name:'Чеснок',                    qty:'1 головка', tags:['Family']},
+    {name:'Шпинат',                    qty:'150 г',     tags:['YA']},
+    {name:'Салат латук',               qty:'1 шт',      tags:['Family']},
+    {name:'Руккола',                   qty:'1 упак.',   tags:['Family']},
+    {name:'Салат айсберг',             qty:'1 шт',      tags:['Family']},
+    {name:'Укроп',                     qty:'1 пучок',   tags:['Family']},
+    {name:'Петрушка',                  qty:'1 пучок',   tags:['Family']},
+    {name:'Грибы',                     qty:'400–500 г', tags:['Family']},
+    {name:'Редис',                     qty:'1 упак.',   tags:['Family']},
+    {name:'Свёкла варёная',            qty:'1 шт',      tags:['Family']},
+    {name:'Оливки',                    qty:'1 банка',   tags:['Family']},
   ]},
-  {cat:'Крупы и паста', items:[
-    {name:'Рис длиннозёрный',     qty:'1 кг',    tags:['Family']},
-    {name:'Гречка',               qty:'800 г',   tags:['Family']},
-    {name:'Овсянка (долгой варки)', qty:'700 г', tags:['Family']},
-    {name:'Паста цельнозерновая', qty:'400 г',   tags:['Family']},
-    {name:'Хлеб цельнозерновой',  qty:'1 буханка', tags:['Family']},
-    {name:'Рисовые лепёшки',      qty:'1 упак.', tags:['YA']},
+  {cat:'🍎 Фрукты и ягоды', items:[
+    {name:'Яблоки',                    qty:'5 шт',      tags:['Family']},
+    {name:'Бананы',                    qty:'10 шт',     tags:['Family']},
+    {name:'Апельсины',                 qty:'3 шт',      tags:['Family']},
+    {name:'Мандарины',                 qty:'1 кг',      tags:['Family']},
+    {name:'Грейпфрут',                 qty:'2 шт',      tags:['YA']},
+    {name:'Груши',                     qty:'3 шт',      tags:['Family']},
+    {name:'Киви',                      qty:'4–6 шт',    tags:['Family']},
+    {name:'Гранат',                    qty:'1 шт',      tags:['Family']},
+    {name:'Лимон',                     qty:'2 шт',      tags:['Family']},
+    {name:'Ягоды свежие',              qty:'400 г',     tags:['Family']},
+    {name:'Ягоды (заморозка)',         qty:'400 г',     tags:['YA','Family']},
+    {name:'Финики',                    qty:'200 г',     tags:['YA']},
   ]},
-  {cat:'Картофель', items:[
-    {name:'Картофель',            qty:'1 кг',    tags:['Family']},
-    {name:'Батат (сладкий картофель)', qty:'1.2 кг', tags:['YA']},
+  {cat:'🍞 Хлеб и выпечка', items:[
+    {name:'Хлеб цельнозерновой',       qty:'1 буханка', tags:['Family']},
+    {name:'Хлеб чёрный',               qty:'1 шт',      tags:['Family']},
+    {name:'Лаваш',                     qty:'1 упак.',   tags:['Family']},
+    {name:'Рисовые лепёшки',           qty:'1 упак.',   tags:['YA']},
   ]},
-  {cat:'Фрукты', items:[
-    {name:'Бананы',               qty:'10 шт',   tags:['Family']},
-    {name:'Яблоки',               qty:'5 шт',    tags:['Family']},
-    {name:'Апельсины',            qty:'3 шт',    tags:['Family']},
-    {name:'Груши',                qty:'3 шт',    tags:['Family']},
-    {name:'Финики',               qty:'200 г',   tags:['YA']},
-    {name:'Ягоды (клубника/заморозка)', qty:'400 г', tags:['Family']},
+  {cat:'🌾 Крупы, бобовые и паста', items:[
+    {name:'Рис длиннозёрный / басмати',qty:'1 кг',      tags:['Family']},
+    {name:'Рис для ризотто (круглый)', qty:'500 г',     tags:['Family']},
+    {name:'Гречка',                    qty:'800 г',     tags:['Family']},
+    {name:'Овсянка (долгой варки)',    qty:'700 г',     tags:['YA','Family']},
+    {name:'Киноа',                     qty:'400 г',     tags:['YA']},
+    {name:'Булгур',                    qty:'400 г',     tags:['Family']},
+    {name:'Кус-кус',                   qty:'400 г',     tags:['Family']},
+    {name:'Перловка',                  qty:'400 г',     tags:['Family']},
+    {name:'Пшено',                     qty:'400 г',     tags:['Family']},
+    {name:'Паста цельнозерновая',      qty:'400 г',     tags:['YA']},
+    {name:'Макароны (яичная лапша)',   qty:'400 г',     tags:['Family']},
+    {name:'Листы лазаньи',             qty:'200–300 г', tags:['Family']},
+    {name:'Чечевица',                  qty:'400 г',     tags:['Family']},
+    {name:'Фасоль (банка)',            qty:'1 банка',   tags:['Family']},
+    {name:'Горошек (банка)',           qty:'1 банка',   tags:['Family']},
+    {name:'Кукуруза (банка)',          qty:'1 банка',   tags:['Family']},
+    {name:'Пельмени',                  qty:'500 г',     tags:['Family']},
   ]},
-  {cat:'Овощи и зелень', items:[
-    {name:'Брокколи',             qty:'500 г',   tags:['Family']},
-    {name:'Шпинат',               qty:'150 г',   tags:['YA']},
-    {name:'Капуста белокочанная', qty:'400 г',   tags:['Family']},
-    {name:'Помидоры',             qty:'600 г',   tags:['Family']},
-    {name:'Огурцы',               qty:'4 шт',    tags:['Family']},
-    {name:'Перец болгарский',     qty:'3 шт',    tags:['Family']},
-    {name:'Авокадо',              qty:'4 шт',    tags:['YA']},
-    {name:'Лимон',                qty:'2 шт',    tags:['Family']},
-  ]},
-  {cat:'Жиры и соусы', items:[
+  {cat:'🧂 Соусы, специи и консервы', items:[
     {name:'Оливковое масло extra virgin', qty:'250 мл', tags:['Family']},
-    {name:'Арахисовая паста (без сахара)', qty:'200 г', tags:['YA']},
-    {name:'Орехи (миндаль/грецкие)', qty:'250 г',       tags:['YA']},
-    {name:'Семена льна + чиа',    qty:'100 г',   tags:['YA']},
-    {name:'Мёд',                  qty:'200 г',   tags:['Family']},
+    {name:'Подсолнечное масло',        qty:'500 мл',    tags:['Family']},
+    {name:'Мёд',                       qty:'200 г',     tags:['Family']},
+    {name:'Томатная паста',            qty:'1 тюбик',   tags:['Family']},
     {name:'Томатный соус (без сахара)', qty:'1 банка',  tags:['Family']},
+    {name:'Соевый соус тёмный',        qty:'1 бутылка', tags:['Family']},
+    {name:'Дижонская горчица',         qty:'1 банка',   tags:['Family']},
+    {name:'Майонез',                   qty:'1 шт',      tags:['Family']},
+    {name:'Кетчуп',                    qty:'1 шт',      tags:['Family']},
+    {name:'Оливки',                    qty:'1 банка',   tags:['Family']},
+    {name:'Солёные огурцы',            qty:'1 банка',   tags:['Family']},
+    {name:'Соль',                      qty:'1 пачка',   tags:['Family']},
+    {name:'Перец чёрный молотый',      qty:'1 баночка', tags:['Family']},
+    {name:'Корица',                    qty:'1 баночка', tags:['Family']},
+    {name:'Сухой укроп',               qty:'1 пакетик', tags:['Family']},
+    {name:'Сухой чеснок',              qty:'1 пакетик', tags:['Family']},
+    {name:'Приправа для курицы',       qty:'1 пакетик', tags:['Family']},
+    {name:'Уксус 9%',                  qty:'1 бутылка', tags:['Family']},
+    {name:'Сахар',                     qty:'1 кг',      tags:['Family']},
+    {name:'Мука',                      qty:'1 кг',      tags:['Family']},
+    {name:'Кунжут',                    qty:'100 г',     tags:['Family']},
+    {name:'Миндальная стружка',        qty:'100 г',     tags:['Family']},
+    {name:'Семена льна + чиа',         qty:'100 г',     tags:['YA']},
+  ]},
+  {cat:'🥤 Напитки', items:[
+    {name:'Минеральная вода',          qty:'1.5 л',     tags:['Family']},
+    {name:'Чай чёрный',                qty:'1 упак.',   tags:['Family']},
+    {name:'Чай мятный',                qty:'1 упак.',   tags:['Family']},
+  ]},
+  {cat:'💪 Спортивное питание', items:[
+    {name:'Whey protein',              qty:'~90 г/день', tags:['YA']},
+    {name:'Креатин моногидрат',        qty:'35 г (5г/день)', tags:['YA']},
+    {name:'Арахисовая паста (без сахара)', qty:'200 г', tags:['YA']},
+    {name:'Орехи (миндаль/грецкие)',   qty:'250 г',     tags:['YA']},
+  ]},
+  {cat:'🧽 Бытовая химия', items:[
+    {name:'Моющее средство для посуды',qty:'1 шт',      tags:['Family']},
+    {name:'Стиральный порошок',        qty:'1 уп.',     tags:['Family']},
+    {name:'Полоскалка для белья',      qty:'1 шт',      tags:['Family']},
+    {name:'Моющее для ванны/душа',     qty:'1 шт',      tags:['Family']},
+    {name:'Средство для стёкол',       qty:'1 шт',      tags:['Family']},
+    {name:'Мыло для рук',              qty:'1 шт',      tags:['Family']},
+    {name:'Шампунь',                   qty:'1 шт',      tags:['Family']},
+    {name:'Губки для посуды',          qty:'1 упак.',   tags:['Family']},
+    {name:'Туалетная бумага',          qty:'1 упак.',   tags:['Family']},
+    {name:'Бумажные полотенца',        qty:'1 рулон',   tags:['Family']},
+    {name:'Салфетки сухие',            qty:'1 пачка',   tags:['Family']},
+    {name:'Салфетки влажные',          qty:'2 упак.',   tags:['Family']},
+    {name:'Мусорные пакеты (малые)',   qty:'1 рулон',   tags:['Family']},
+    {name:'Мусорные пакеты (20 л)',    qty:'1 рулон',   tags:['Family']},
+    {name:'Пакеты для хранения еды',   qty:'1 упак.',   tags:['Family']},
+    {name:'Пергамент для выпечки',     qty:'1 рулон',   tags:['Family']},
+    {name:'Фольга',                    qty:'1 рулон',   tags:['Family']},
+    {name:'Пищевая плёнка',            qty:'1 рулон',   tags:['Family']},
   ]},
 ];
 
@@ -690,6 +791,12 @@ function maybeClosePreset(e){ if(e.target===document.getElementById('presetOverl
 function setMF(f){
   mfActive=f;
   document.querySelectorAll('.mf-chip').forEach(function(b){b.classList.toggle('active',b.dataset.mf===f);});
+  // Update footer hint
+  var hint=document.getElementById('presetTagHint');
+  if(hint){
+    if(f==='all') hint.textContent='Теги берутся из настроек каждого продукта';
+    else hint.textContent='Все добавленные товары получат тег «'+(f==='YA'?'Y+A':f==='VA'?'V+A':'Family')+'»';
+  }
   renderPresetList();
 }
 
@@ -736,7 +843,11 @@ async function addSelected(){
     PRESET.forEach(function(cat){
       if(cat.cat!==catName) return;
       cat.items.forEach(function(it){
-        if(it.name===itemName) toAdd.push({name:it.name,quantity:1,unit:it.qty,tags:it.tags.slice()});
+        if(it.name!==itemName) return;
+        // If a tag filter is active in the modal, ensure that tag is included
+        var tags=it.tags.slice();
+        if(mfActive!=='all' && tags.indexOf(mfActive)<0) tags.push(mfActive);
+        toAdd.push({name:it.name, quantity:1, unit:it.qty, tags:tags});
       });
     });
   });
