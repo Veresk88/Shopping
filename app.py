@@ -14,7 +14,6 @@ def get_db():
 
 
 def parse_tags(raw):
-    """Always return a list of tag strings."""
     if not raw:
         return ["Family"]
     if raw.startswith("["):
@@ -23,7 +22,6 @@ def parse_tags(raw):
             return tags if isinstance(tags, list) and tags else ["Family"]
         except Exception:
             pass
-    # Legacy single-tag migration
     mapping = {
         "Общее": "Family", "obsh": "Family",
         "ЕА": "YA", "ea": "YA", "Y+A": "YA",
@@ -82,7 +80,6 @@ def add_item():
     tags = data.get("tags", ["Family"])
     if not isinstance(tags, list) or not tags:
         tags = ["Family"]
-    tag_json = json.dumps(tags)
 
     if not name:
         return jsonify({"error": "Name is required"}), 400
@@ -90,11 +87,36 @@ def add_item():
     with get_db() as conn:
         cursor = conn.execute(
             "INSERT INTO items (name, quantity, unit, tag) VALUES (?, ?, ?, ?)",
-            (name, quantity, unit, tag_json)
+            (name, quantity, unit, json.dumps(tags))
         )
         conn.commit()
         row = conn.execute("SELECT * FROM items WHERE id = ?", (cursor.lastrowid,)).fetchone()
         return jsonify(item_to_dict(row)), 201
+
+
+@app.route("/api/items/bulk", methods=["POST"])
+def bulk_add():
+    """Add multiple items at once (for preset loading)."""
+    items_data = request.json
+    if not isinstance(items_data, list):
+        return jsonify({"error": "Expected a list"}), 400
+    with get_db() as conn:
+        for item in items_data:
+            name = item.get("name", "").strip()
+            if not name:
+                continue
+            quantity = int(item.get("quantity", 1))
+            unit = item.get("unit", "").strip()
+            tags = item.get("tags", ["Family"])
+            if not isinstance(tags, list) or not tags:
+                tags = ["Family"]
+            conn.execute(
+                "INSERT INTO items (name, quantity, unit, tag) VALUES (?, ?, ?, ?)",
+                (name, quantity, unit, json.dumps(tags))
+            )
+        conn.commit()
+    rows = conn.execute("SELECT * FROM items ORDER BY bought ASC, created_at DESC").fetchall()
+    return jsonify([item_to_dict(r) for r in rows]), 201
 
 
 @app.route("/api/items/<int:item_id>", methods=["PATCH"])
@@ -146,6 +168,14 @@ def delete_item(item_id):
 def clear_bought():
     with get_db() as conn:
         conn.execute("DELETE FROM items WHERE bought = 1")
+        conn.commit()
+        return jsonify({"ok": True})
+
+
+@app.route("/api/items/uncheck-all", methods=["POST"])
+def uncheck_all():
+    with get_db() as conn:
+        conn.execute("UPDATE items SET bought = 0")
         conn.commit()
         return jsonify({"ok": True})
 
