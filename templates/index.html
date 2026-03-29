@@ -52,7 +52,7 @@
     body::before { width:560px;height:560px;background:#c4dbd0;top:-140px;left:-180px;opacity:.65; }
     body::after  { width:420px;height:420px;background:#d2e8da;bottom:-60px;right:-120px;opacity:.55; }
 
-    /* HEADER */
+    /* ── HEADER ── */
     header {
       position:sticky; top:0; z-index:100;
       background:var(--glass-hdr);
@@ -60,34 +60,38 @@
       -webkit-backdrop-filter:blur(28px) saturate(1.6);
       border-bottom:1px solid var(--divider);
       box-shadow:0 1px 0 rgba(0,0,0,0.05), 0 4px 20px rgba(40,80,60,0.07);
-      padding:16px 20px 14px;
+      padding:14px 20px 12px;
     }
-    .hdr { display:flex; align-items:center; justify-content:space-between; max-width:640px; margin:0 auto; }
+    .hdr { display:flex; align-items:center; justify-content:space-between; max-width:640px; margin:0 auto; gap:10px; }
     .hdr-left { display:flex; align-items:center; gap:10px; }
     .sync-dot { width:8px;height:8px;border-radius:50%;background:var(--accent);transition:background .3s;flex-shrink:0; }
     .sync-dot.syncing { background:var(--amber);animation:pulse 1s infinite; }
     .sync-dot.error   { background:var(--red); }
     @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.2} }
-    h1 { font-size:26px;font-weight:700;letter-spacing:-.6px;color:var(--t1); }
-    .btn-clear {
-      background:none;border:1.5px solid rgba(217,79,61,.30);
-      color:var(--red);font-size:13px;font-weight:600;
-      cursor:pointer;padding:5px 13px;border-radius:20px;
-      transition:background .15s,border-color .15s;
-    }
-    .btn-clear:hover { background:var(--red-dim);border-color:rgba(217,79,61,.55); }
+    h1 { font-size:24px;font-weight:700;letter-spacing:-.6px;color:var(--t1); }
 
-    /* MAIN */
+    .hdr-actions { display:flex; gap:8px; align-items:center; }
+    .btn-hdr {
+      background:none; font-size:13px; font-weight:600; cursor:pointer;
+      padding:5px 13px; border-radius:20px; transition:background .15s, border-color .15s;
+      white-space:nowrap;
+    }
+    .btn-uncheck { border:1.5px solid rgba(58,125,90,.30); color:var(--accent); }
+    .btn-uncheck:hover { background:var(--accent-dim); border-color:var(--accent); }
+    .btn-clear { border:1.5px solid rgba(217,79,61,.30); color:var(--red); }
+    .btn-clear:hover { background:var(--red-dim); border-color:rgba(217,79,61,.55); }
+
+    /* ── MAIN ── */
     main { position:relative;z-index:1;max-width:640px;margin:0 auto;padding:20px 16px 0; }
 
-    /* ADD FORM */
+    /* ── ADD FORM ── */
     .add-form {
       background:var(--glass);
       backdrop-filter:blur(20px) saturate(1.5);
       -webkit-backdrop-filter:blur(20px) saturate(1.5);
       border:1px solid var(--glass-brd);
-      border-radius:var(--r);padding:14px;
-      margin-bottom:18px;box-shadow:var(--sh);
+      border-radius:var(--r); padding:14px;
+      margin-bottom:18px; box-shadow:var(--sh);
     }
     .row1 { display:flex;gap:8px;margin-bottom:8px; }
     .row2 { display:flex;gap:8px; }
@@ -97,8 +101,8 @@
       background:var(--glass-inp);
       border:1px solid rgba(255,255,255,.84);
       border-radius:var(--rs);
-      padding:10px 12px;color:var(--t1);font-size:15px;outline:none;
-      transition:background .2s,border-color .2s,box-shadow .2s;
+      padding:10px 12px; color:var(--t1); font-size:15px; outline:none;
+      transition:background .2s, border-color .2s, box-shadow .2s;
     }
     input:focus { background:var(--glass-inp-f);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim); }
     input::placeholder { color:var(--t3); }
@@ -107,36 +111,137 @@
     #newUnit { width:68px; }
 
     .btn-add {
-      flex:1;background:var(--accent);border:none;
-      border-radius:var(--rs);padding:10px 16px;
-      color:#fff;font-size:15px;font-weight:600;cursor:pointer;
+      flex:1; background:var(--accent); border:none;
+      border-radius:var(--rs); padding:10px 16px;
+      color:#fff; font-size:15px; font-weight:600; cursor:pointer;
       box-shadow:0 2px 10px rgba(58,125,90,.28);
-      transition:background .15s,transform .1s,box-shadow .15s;
+      transition:background .15s, transform .1s, box-shadow .15s;
     }
-    .btn-add:hover  { background:var(--accent-l);box-shadow:0 4px 16px rgba(58,125,90,.36); }
+    .btn-add:hover  { background:var(--accent-l); box-shadow:0 4px 16px rgba(58,125,90,.36); }
     .btn-add:active { transform:scale(.96); }
 
-    /* TAG TOGGLE BUTTONS in form — multi-select */
+    /* TAG TOGGLE in form */
     .tag-toggle {
-      flex:1;border:1.5px solid var(--divider);
-      border-radius:20px;padding:7px 6px;
-      background:rgba(255,255,255,.40);color:var(--t2);
-      font-size:13px;font-weight:500;cursor:pointer;
-      transition:all .15s;text-align:center;user-select:none;
+      flex:1; border:1.5px solid var(--divider);
+      border-radius:20px; padding:7px 6px;
+      background:rgba(255,255,255,.40); color:var(--t2);
+      font-size:13px; font-weight:500; cursor:pointer;
+      transition:all .15s; text-align:center; user-select:none;
     }
     .tag-toggle:hover { border-color:var(--accent);color:var(--accent);background:var(--accent-dim); }
     .tag-toggle.on-Family { background:rgba(0,0,0,.07);border-color:rgba(0,0,0,.22);color:var(--t1);font-weight:700; }
     .tag-toggle.on-YA     { background:var(--accent-dim2);border-color:var(--accent);color:var(--accent);font-weight:700; }
     .tag-toggle.on-VA     { background:var(--amber-dim);border-color:var(--amber);color:var(--amber);font-weight:700; }
 
+    /* PRESET BUTTON */
+    .btn-preset {
+      width:100%; margin-top:10px;
+      background:none; border:1.5px dashed var(--divider);
+      border-radius:var(--rs); padding:9px 16px;
+      color:var(--t3); font-size:13px; font-weight:500; cursor:pointer;
+      transition:all .15s; text-align:center;
+    }
+    .btn-preset:hover { border-color:var(--accent);color:var(--accent);background:var(--accent-dim); }
+
+    /* PRESET MODAL */
+    .modal-overlay {
+      display:none; position:fixed; inset:0; z-index:500;
+      background:rgba(0,0,0,0.25);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+      align-items:flex-end; justify-content:center;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal {
+      background:rgba(248,251,248,0.97);
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--glass-brd);
+      border-radius:24px 24px 0 0;
+      width:100%; max-width:640px;
+      max-height:85vh; display:flex; flex-direction:column;
+      box-shadow:0 -8px 40px rgba(40,80,60,0.18);
+      overflow:hidden;
+    }
+    .modal-hdr {
+      padding:16px 20px 12px;
+      border-bottom:1px solid var(--divider);
+      display:flex; align-items:center; justify-content:space-between;
+      flex-shrink:0;
+    }
+    .modal-hdr h2 { font-size:17px;font-weight:700;color:var(--t1); }
+    .modal-hdr-right { display:flex;gap:8px;align-items:center; }
+    .modal-count { font-size:13px;color:var(--t3); }
+    .modal-close {
+      background:rgba(0,0,0,.07); border:none; color:var(--t2);
+      width:28px; height:28px; border-radius:50%; cursor:pointer;
+      font-size:16px; display:flex; align-items:center; justify-content:center;
+      transition:background .15s;
+    }
+    .modal-close:hover { background:rgba(0,0,0,.13); }
+    .modal-body { overflow-y:auto; padding:12px 16px 20px; flex:1; }
+
+    /* Tag filter inside modal */
+    .modal-filter { display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap; }
+    .mf-chip {
+      border:1.5px solid var(--divider); border-radius:20px; padding:5px 13px;
+      background:rgba(255,255,255,.6); color:var(--t2);
+      font-size:12.5px; font-weight:500; cursor:pointer; transition:all .15s;
+    }
+    .mf-chip:hover { border-color:var(--accent);color:var(--accent); }
+    .mf-chip.active { background:var(--accent);border-color:var(--accent);color:#fff; }
+
+    /* Preset category */
+    .preset-cat { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin:14px 0 6px 4px; }
+    .preset-cat:first-child { margin-top:0; }
+
+    /* Preset item row */
+    .preset-row {
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:var(--rs);
+      background:var(--glass); border:1px solid var(--glass-brd);
+      margin-bottom:2px; cursor:pointer;
+      transition:background .15s, box-shadow .15s;
+      user-select:none;
+    }
+    .preset-row:hover { background:var(--glass-h); box-shadow:0 2px 8px rgba(40,80,60,.09); }
+    .preset-row:first-child { border-radius:var(--r) var(--r) var(--rs) var(--rs); }
+    .preset-row:last-child  { border-radius:var(--rs) var(--rs) var(--r) var(--r); }
+    .preset-row:only-child  { border-radius:var(--r); }
+    .preset-row.selected { background:var(--accent-dim); border-color:rgba(58,125,90,.30); }
+    .preset-check {
+      width:20px; height:20px; border-radius:50%;
+      border:2px solid var(--t3); flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      transition:all .15s;
+    }
+    .preset-row.selected .preset-check { background:var(--accent);border-color:var(--accent); }
+    .preset-row.selected .preset-check::after { content:'✓';color:#fff;font-size:11px;font-weight:700; }
+    .preset-name { flex:1; font-size:14.5px; color:var(--t1); }
+    .preset-qty  { font-size:13px; color:var(--t3); }
+
+    .modal-footer {
+      padding:12px 16px;
+      border-top:1px solid var(--divider);
+      flex-shrink:0;
+    }
+    .btn-add-selected {
+      width:100%; background:var(--accent); border:none;
+      border-radius:var(--rs); padding:13px;
+      color:#fff; font-size:15px; font-weight:600; cursor:pointer;
+      box-shadow:0 2px 10px rgba(58,125,90,.28);
+      transition:background .15s, transform .1s;
+    }
+    .btn-add-selected:hover  { background:var(--accent-l); }
+    .btn-add-selected:active { transform:scale(.98); }
+    .btn-add-selected:disabled { background:var(--t3); box-shadow:none; cursor:default; }
+
     /* FILTER BAR */
     .filter-bar { display:flex;gap:7px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px; }
     .filter-bar::-webkit-scrollbar { display:none; }
     .fchip {
-      border:1.5px solid var(--divider);border-radius:20px;padding:6px 15px;
-      background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-      color:var(--t2);font-size:13px;font-weight:500;cursor:pointer;
-      transition:all .15s;white-space:nowrap;flex-shrink:0;
+      border:1.5px solid var(--divider); border-radius:20px; padding:6px 15px;
+      background:var(--glass); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      color:var(--t2); font-size:13px; font-weight:500; cursor:pointer;
+      transition:all .15s; white-space:nowrap; flex-shrink:0;
       box-shadow:0 1px 4px rgba(40,80,60,.06);
     }
     .fchip:hover { border-color:var(--accent);color:var(--accent); }
@@ -145,34 +250,31 @@
     /* STATS */
     .stats { display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap; }
     .schip {
-      background:var(--glass);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-      border:1px solid var(--glass-brd);border-radius:20px;
-      padding:5px 13px;font-size:12.5px;color:var(--t2);
+      background:var(--glass); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      border:1px solid var(--glass-brd); border-radius:20px;
+      padding:5px 13px; font-size:12.5px; color:var(--t2);
       box-shadow:0 1px 4px rgba(40,80,60,.06);
     }
     .schip b { color:var(--accent);font-weight:700; }
 
     .sec-title { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin:0 4px 8px; }
-
     #list-pending, #list-bought { display:flex;flex-direction:column;gap:2px;margin-bottom:24px; }
 
     /* ITEM */
     .item {
       background:var(--glass);
-      backdrop-filter:blur(16px) saturate(1.4);
-      -webkit-backdrop-filter:blur(16px) saturate(1.4);
-      border:1px solid var(--glass-brd);border-radius:var(--rs);
-      padding:12px 14px;display:flex;align-items:center;gap:10px;
+      backdrop-filter:blur(16px) saturate(1.4); -webkit-backdrop-filter:blur(16px) saturate(1.4);
+      border:1px solid var(--glass-brd); border-radius:var(--rs);
+      padding:12px 14px; display:flex; align-items:center; gap:10px;
       box-shadow:0 1px 6px rgba(40,80,60,.07);
-      transition:background .15s,box-shadow .15s,opacity .25s;
+      transition:background .15s, box-shadow .15s, opacity .25s;
     }
     .item:first-child { border-radius:var(--r) var(--r) var(--rs) var(--rs); }
     .item:last-child  { border-radius:var(--rs) var(--rs) var(--r) var(--r); }
     .item:only-child  { border-radius:var(--r); }
-    .item.bought { opacity:.46; }
+    .item.bought { opacity:.45; }
     .item:hover  { background:var(--glass-h);box-shadow:0 3px 14px rgba(40,80,60,.11); }
 
-    /* Checkbox */
     .cb {
       width:23px;height:23px;border-radius:50%;
       border:2px solid var(--t3);flex-shrink:0;cursor:pointer;
@@ -185,7 +287,6 @@
     .cb svg { display:none; }
     .item.bought .cb svg { display:block; }
 
-    /* Name */
     .iname { flex:1;font-size:15.5px;font-weight:400;color:var(--t1);min-width:0;word-break:break-word; }
     .item.bought .iname { text-decoration:line-through;color:var(--t3); }
     .iname-inp {
@@ -193,40 +294,45 @@
       color:var(--t1);font-size:15.5px;outline:none;width:100%;padding:1px 2px;
     }
 
-    /* Multi-tag badges on item */
-    .ibadges { display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;max-width:100px; }
+    /* Inline tag editor on item */
+    .ibadges { display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;max-width:110px;align-items:center; }
     .ibadge {
-      font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:10px;
+      font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:10px;
       letter-spacing:.2px;cursor:pointer;border:1.5px solid transparent;
-      transition:opacity .15s;white-space:nowrap;
+      transition:all .15s;white-space:nowrap;
     }
-    .ibadge:hover { opacity:.65; }
+    .ibadge:hover { opacity:.7; }
     .ibadge.tag-Family { background:rgba(0,0,0,.06);color:var(--t2);border-color:rgba(0,0,0,.10); }
     .ibadge.tag-YA     { background:var(--accent-dim);color:var(--accent);border-color:rgba(58,125,90,.25); }
     .ibadge.tag-VA     { background:var(--amber-dim);color:var(--amber);border-color:rgba(160,116,40,.25); }
 
-    /* Tag editor popup on item */
-    .tag-editor {
-      position:absolute;z-index:200;
-      background:rgba(255,255,255,0.96);
+    /* Tag popup */
+    .tag-popup {
+      position:fixed; z-index:300;
+      background:rgba(252,254,252,0.97);
       backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
       border:1px solid var(--glass-brd);
-      border-radius:14px;padding:10px;
+      border-radius:16px; padding:10px 12px;
       box-shadow:0 8px 32px rgba(40,80,60,0.18);
-      display:flex;gap:7px;
+      display:none; flex-direction:column; gap:6px; min-width:160px;
     }
-    .te-btn {
-      border:1.5px solid var(--divider);border-radius:16px;
-      padding:5px 12px;background:rgba(255,255,255,.6);
-      color:var(--t2);font-size:12.5px;font-weight:500;cursor:pointer;
-      transition:all .15s;white-space:nowrap;
+    .tag-popup.open { display:flex; }
+    .tag-popup-title { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:2px; }
+    .tp-row { display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:10px;cursor:pointer;transition:background .12s; }
+    .tp-row:hover { background:rgba(0,0,0,.05); }
+    .tp-check {
+      width:18px;height:18px;border-radius:50%;border:2px solid var(--t3);flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;transition:all .15s;
     }
-    .te-btn:hover { border-color:var(--accent);color:var(--accent); }
-    .te-btn.on-Family { background:rgba(0,0,0,.07);border-color:rgba(0,0,0,.22);color:var(--t1);font-weight:700; }
-    .te-btn.on-YA     { background:var(--accent-dim2);border-color:var(--accent);color:var(--accent);font-weight:700; }
-    .te-btn.on-VA     { background:var(--amber-dim);border-color:var(--amber);color:var(--amber);font-weight:700; }
+    .tp-row.on-Family .tp-check { background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.25); }
+    .tp-row.on-YA     .tp-check { background:var(--accent);border-color:var(--accent); }
+    .tp-row.on-VA     .tp-check { background:var(--amber);border-color:var(--amber); }
+    .tp-check-inner { display:none; }
+    .tp-row.on-Family .tp-check-inner,
+    .tp-row.on-YA     .tp-check-inner,
+    .tp-row.on-VA     .tp-check-inner { display:block;color:#fff;font-size:10px;font-weight:700; }
+    .tp-label { font-size:13.5px;font-weight:500;color:var(--t1); }
 
-    /* Qty */
     .qty { display:flex;align-items:center;gap:5px;flex-shrink:0; }
     .qbtn {
       width:26px;height:26px;border-radius:50%;
@@ -241,7 +347,6 @@
     .qval { min-width:22px;text-align:center;font-size:14px;font-weight:600;color:var(--t2); }
     .iunit { font-size:12px;color:var(--t3);min-width:18px;font-weight:500; }
 
-    /* Delete */
     .del {
       background:none;border:none;color:var(--t3);cursor:pointer;
       padding:4px;border-radius:8px;display:flex;align-items:center;
@@ -249,14 +354,13 @@
     }
     .del:hover { color:var(--red);background:var(--red-dim); }
 
-    /* Empty */
     .empty { text-align:center;padding:36px 20px;color:var(--t3); }
     .empty-icon { font-size:44px;margin-bottom:10px; }
 
-    @media (max-width:480px) {
-      #newUnit { width:52px; }
-      #newQty  { width:54px; }
-      .ibadges { max-width:80px; }
+    @media(max-width:480px){
+      #newUnit{width:52px;} #newQty{width:54px;}
+      .ibadges{max-width:80px;}
+      .btn-uncheck span { display:none; }
     }
   </style>
 </head>
@@ -268,7 +372,10 @@
       <div class="sync-dot" id="sd"></div>
       <h1>🛒 Покупки</h1>
     </div>
-    <button class="btn-clear" onclick="clearBought()">Очистить ✓</button>
+    <div class="hdr-actions">
+      <button class="btn-hdr btn-uncheck" onclick="uncheckAll()">↺ <span>Сбросить</span></button>
+      <button class="btn-hdr btn-clear"   onclick="clearBought()">Очистить ✓</button>
+    </div>
   </div>
 </header>
 
@@ -288,6 +395,7 @@
       <button class="tag-toggle" data-tag="YA"     onclick="toggleFormTag('YA')">Y + A</button>
       <button class="tag-toggle" data-tag="VA"     onclick="toggleFormTag('VA')">V + A</button>
     </div>
+    <button class="btn-preset" onclick="openPreset()">＋ Добавить из базового списка…</button>
   </div>
 
   <div class="filter-bar">
@@ -309,193 +417,380 @@
   </div>
 </main>
 
-<!-- Tag editor popup -->
-<div class="tag-editor" id="tagEditor" style="display:none">
-  <button class="te-btn" data-tag="Family" onclick="teToggle('Family')">Family</button>
-  <button class="te-btn" data-tag="YA"     onclick="teToggle('YA')">Y + A</button>
-  <button class="te-btn" data-tag="VA"     onclick="teToggle('VA')">V + A</button>
+<!-- Tag popup -->
+<div class="tag-popup" id="tagPopup">
+  <div class="tag-popup-title">Теги</div>
+  <div class="tp-row" data-tag="Family" onclick="tpToggle('Family')">
+    <div class="tp-check"><span class="tp-check-inner">✓</span></div>
+    <span class="tp-label">Family</span>
+  </div>
+  <div class="tp-row" data-tag="YA" onclick="tpToggle('YA')">
+    <div class="tp-check"><span class="tp-check-inner">✓</span></div>
+    <span class="tp-label">Y + A</span>
+  </div>
+  <div class="tp-row" data-tag="VA" onclick="tpToggle('VA')">
+    <div class="tp-check"><span class="tp-check-inner">✓</span></div>
+    <span class="tp-label">V + A</span>
+  </div>
+</div>
+
+<!-- Preset modal -->
+<div class="modal-overlay" id="presetOverlay" onclick="maybeClosePreset(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h2>Базовый список</h2>
+      <div class="modal-hdr-right">
+        <span class="modal-count" id="presetCount">0 выбрано</span>
+        <button class="modal-close" onclick="closePreset()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-filter">
+        <button class="mf-chip active" data-mf="all"    onclick="setMF('all')">Все</button>
+        <button class="mf-chip"        data-mf="Family" onclick="setMF('Family')">Family</button>
+        <button class="mf-chip"        data-mf="YA"     onclick="setMF('YA')">Y + A</button>
+        <button class="mf-chip"        data-mf="VA"     onclick="setMF('VA')">V + A</button>
+      </div>
+      <div id="presetList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-add-selected" id="btnAddSelected" onclick="addSelected()" disabled>Добавить выбранные</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  var items=[], editId=null, activeF='all';
-  var formTags=['Family']; // multi-select in form
-  var teItemId=null, teTags=[];
+// ── State ──────────────────────────────────────────────
+var items=[], editId=null, activeF='all';
+var formTags=['Family'];
+var tpItemId=null, tpTags=[];
+var mfActive='all';
+var presetSelected={}; // key: preset item index
+var sd=document.getElementById('sd');
+var tagPopup=document.getElementById('tagPopup');
 
-  var sd=document.getElementById('sd');
-  var tagEditor=document.getElementById('tagEditor');
+var LABELS={Family:'Family',YA:'Y+A',VA:'V+A'};
+var TAGS=['Family','YA','VA'];
 
-  var LABELS={Family:'Family',YA:'Y+A',VA:'V+A'};
-  var TAGS=['Family','YA','VA'];
+// ── Preset data ────────────────────────────────────────
+var PRESET=[
+  {cat:'Птица и мясо', items:[
+    {name:'Куриная грудка',       qty:'1.3 кг',  tags:['YA']},
+    {name:'Куриное бедро (без кости)', qty:'400 г', tags:['YA']},
+    {name:'Индейка (филе)',        qty:'500 г',   tags:['YA']},
+    {name:'Говядина (вырезка)',    qty:'600 г',   tags:['YA']},
+  ]},
+  {cat:'Рыба', items:[
+    {name:'Лосось (филе)',         qty:'550 г',   tags:['YA']},
+    {name:'Скумбрия',             qty:'300 г',   tags:['YA']},
+    {name:'Тунец в воде (консервы)', qty:'2 × 160 г', tags:['YA']},
+  ]},
+  {cat:'Яйца и молочное', items:[
+    {name:'Яйца',                 qty:'28–30 шт', tags:['Family']},
+    {name:'Творог 5%',            qty:'1.5 кг',  tags:['YA']},
+    {name:'Греческий йогурт',     qty:'600 г',   tags:['YA']},
+    {name:'Кефир',                qty:'1 л',     tags:['Family']},
+    {name:'Молоко 2.5–3.2%',      qty:'2 л',     tags:['Family']},
+    {name:'Сыр твёрдый',          qty:'100 г',   tags:['Family']},
+  ]},
+  {cat:'Добавки', items:[
+    {name:'Whey protein',         qty:'~90 г (3×30г, дни зала)', tags:['YA']},
+    {name:'Креатин моногидрат',   qty:'35 г (5г/день)',          tags:['YA']},
+  ]},
+  {cat:'Крупы и паста', items:[
+    {name:'Рис длиннозёрный',     qty:'1 кг',    tags:['Family']},
+    {name:'Гречка',               qty:'800 г',   tags:['Family']},
+    {name:'Овсянка (долгой варки)', qty:'700 г', tags:['Family']},
+    {name:'Паста цельнозерновая', qty:'400 г',   tags:['Family']},
+    {name:'Хлеб цельнозерновой',  qty:'1 буханка', tags:['Family']},
+    {name:'Рисовые лепёшки',      qty:'1 упак.', tags:['YA']},
+  ]},
+  {cat:'Картофель', items:[
+    {name:'Картофель',            qty:'1 кг',    tags:['Family']},
+    {name:'Батат (сладкий картофель)', qty:'1.2 кг', tags:['YA']},
+  ]},
+  {cat:'Фрукты', items:[
+    {name:'Бананы',               qty:'10 шт',   tags:['Family']},
+    {name:'Яблоки',               qty:'5 шт',    tags:['Family']},
+    {name:'Апельсины',            qty:'3 шт',    tags:['Family']},
+    {name:'Груши',                qty:'3 шт',    tags:['Family']},
+    {name:'Финики',               qty:'200 г',   tags:['YA']},
+    {name:'Ягоды (клубника/заморозка)', qty:'400 г', tags:['Family']},
+  ]},
+  {cat:'Овощи и зелень', items:[
+    {name:'Брокколи',             qty:'500 г',   tags:['Family']},
+    {name:'Шпинат',               qty:'150 г',   tags:['YA']},
+    {name:'Капуста белокочанная', qty:'400 г',   tags:['Family']},
+    {name:'Помидоры',             qty:'600 г',   tags:['Family']},
+    {name:'Огурцы',               qty:'4 шт',    tags:['Family']},
+    {name:'Перец болгарский',     qty:'3 шт',    tags:['Family']},
+    {name:'Авокадо',              qty:'4 шт',    tags:['YA']},
+    {name:'Лимон',                qty:'2 шт',    tags:['Family']},
+  ]},
+  {cat:'Жиры и соусы', items:[
+    {name:'Оливковое масло extra virgin', qty:'250 мл', tags:['Family']},
+    {name:'Арахисовая паста (без сахара)', qty:'200 г', tags:['YA']},
+    {name:'Орехи (миндаль/грецкие)', qty:'250 г',       tags:['YA']},
+    {name:'Семена льна + чиа',    qty:'100 г',   tags:['YA']},
+    {name:'Мёд',                  qty:'200 г',   tags:['Family']},
+    {name:'Томатный соус (без сахара)', qty:'1 банка',  tags:['Family']},
+  ]},
+];
 
-  function sync(s){ sd.className='sync-dot'+(s==='ok'?'':s==='sync'?' syncing':' error'); }
+// Build flat index for quick lookup
+var PRESET_FLAT=[];
+PRESET.forEach(function(cat){ cat.items.forEach(function(it){ PRESET_FLAT.push({cat:cat.cat,name:it.name,qty:it.qty,tags:it.tags}); }); });
 
-  /* ── Form tag multi-toggle ── */
-  function toggleFormTag(tag){
-    var idx=formTags.indexOf(tag);
-    if(idx>=0){ if(formTags.length>1) formTags.splice(idx,1); } // keep at least one
-    else formTags.push(tag);
-    renderFormTags();
-  }
-  function renderFormTags(){
-    document.querySelectorAll('.tag-toggle').forEach(function(b){
-      var t=b.dataset.tag;
-      b.className='tag-toggle'+(formTags.indexOf(t)>=0?' on-'+t:'');
-    });
-  }
+// ── Sync indicator ─────────────────────────────────────
+function sync(s){ sd.className='sync-dot'+(s==='ok'?'':s==='sync'?' syncing':' error'); }
 
-  /* ── Filter ── */
-  function setF(f){
-    activeF=f;
-    document.querySelectorAll('.fchip').forEach(function(b){
-      b.classList.toggle('active',b.dataset.f===f);
-    });
-    render();
-  }
-
-  /* ── Fetch ── */
-  async function load(){
-    try{
-      var r=await fetch('/api/items');
-      if(!r.ok)throw 0;
-      items=await r.json();
-      sync('ok'); render();
-    }catch(e){ sync('error'); }
-  }
-
-  /* ── Render list ── */
-  function render(){
-    var fil;
-    if(activeF==='all') fil=items;
-    else fil=items.filter(function(i){ return (i.tags||['Family']).indexOf(activeF)>=0; });
-
-    var pend=fil.filter(function(i){return !i.bought;});
-    var bght=fil.filter(function(i){return i.bought;});
-
-    document.getElementById('list-pending').innerHTML=
-      pend.length?pend.map(renderItem).join(''):
-      '<div class="empty"><div class="empty-icon">🌿</div><p>Список пуст!</p></div>';
-
-    var bs=document.getElementById('bs');
-    if(bght.length){ bs.style.display='';document.getElementById('list-bought').innerHTML=bght.map(renderItem).join(''); }
-    else bs.style.display='none';
-
-    var t=fil.length,d=bght.length;
-    document.getElementById('stats').innerHTML=t?
-      '<div class="schip">Всего: <b>'+t+'</b></div>'+
-      '<div class="schip">Куплено: <b>'+d+'</b></div>'+
-      '<div class="schip">Осталось: <b>'+(t-d)+'</b></div>':'';
-  }
-
-  function renderItem(item){
-    var ed=editId===item.id;
-    var tags=item.tags||['Family'];
-    var nm=ed?
-      '<input class="iname-inp" id="ei'+item.id+'" value="'+esc(item.name)+'"'+
-      ' onblur="save('+item.id+')"'+
-      ' onkeydown="if(event.key===\'Enter\')save('+item.id+');if(event.key===\'Escape\')cancelEdit()">':
-      '<span class="iname" ondblclick="startEdit('+item.id+')">'+esc(item.name)+'</span>';
-
-    var badges=tags.map(function(t){
-      return '<span class="ibadge tag-'+t+'" onclick="openTagEditor(event,'+item.id+')" title="Редактировать теги">'+(LABELS[t]||t)+'</span>';
-    }).join('');
-
-    return '<div class="item'+(item.bought?' bought':'')+'" id="it'+item.id+'">'+
-      '<div class="cb" onclick="toggleB('+item.id+','+item.bought+')">'+
-      '<svg width="13" height="10" viewBox="0 0 13 10" fill="none">'+
-      '<path d="M1 5L4.5 8.5L12 1" stroke="white" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
-      nm+
-      '<div class="ibadges">'+badges+'</div>'+
-      '<div class="qty">'+
-      '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity-1)+')">−</button>'+
-      '<span class="qval">'+item.quantity+'</span>'+
-      '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity+1)+')">+</button>'+
-      '</div>'+
-      '<span class="iunit">'+esc(item.unit||'')+'</span>'+
-      '<button class="del" onclick="del('+item.id+')">'+
-      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none">'+
-      '<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>'+
-      '</div>';
-  }
-
-  /* ── Tag editor popup ── */
-  function openTagEditor(e, itemId){
-    e.stopPropagation();
-    var item=items.find(function(i){return i.id===itemId;});
-    if(!item)return;
-    teItemId=itemId;
-    teTags=(item.tags||['Family']).slice();
-    renderTeButtons();
-    // position near click
-    var x=e.clientX, y=e.clientY+window.scrollY;
-    tagEditor.style.display='flex';
-    tagEditor.style.top=(y+8)+'px';
-    tagEditor.style.left=Math.min(x-10, window.innerWidth-220)+'px';
-  }
-
-  function renderTeButtons(){
-    document.querySelectorAll('.te-btn').forEach(function(b){
-      var t=b.dataset.tag;
-      b.className='te-btn'+(teTags.indexOf(t)>=0?' on-'+t:'');
-    });
-  }
-
-  async function teToggle(tag){
-    var idx=teTags.indexOf(tag);
-    if(idx>=0){ if(teTags.length>1)teTags.splice(idx,1); }
-    else teTags.push(tag);
-    renderTeButtons();
-    sync('sync');
-    await api('PATCH','/api/items/'+teItemId,{tags:teTags.slice()});
-  }
-
-  document.addEventListener('click',function(e){
-    if(tagEditor.style.display!=='none' && !tagEditor.contains(e.target)){
-      tagEditor.style.display='none';
-      teItemId=null;
-    }
-  });
-
-  /* ── Actions ── */
-  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function startEdit(id){editId=id;render();setTimeout(function(){var e=document.getElementById('ei'+id);if(e)e.focus();},10);}
-  function cancelEdit(){editId=null;render();}
-  async function save(id){
-    var e=document.getElementById('ei'+id);if(!e)return;
-    var n=e.value.trim();if(!n){cancelEdit();return;}
-    editId=null;await api('PATCH','/api/items/'+id,{name:n});
-  }
-
-  async function addItem(){
-    var name=document.getElementById('newName').value.trim();
-    var qty=parseInt(document.getElementById('newQty').value)||1;
-    var unit=document.getElementById('newUnit').value.trim();
-    if(!name)return;sync('sync');
-    await api('POST','/api/items',{name:name,quantity:qty,unit:unit,tags:formTags.slice()});
-    document.getElementById('newName').value='';
-    document.getElementById('newQty').value='1';
-    document.getElementById('newUnit').value='';
-    document.getElementById('newName').focus();
-  }
-
-  async function toggleB(id,cur){sync('sync');await api('PATCH','/api/items/'+id,{bought:!cur});}
-  async function chQty(id,q){if(q<1)return;sync('sync');await api('PATCH','/api/items/'+id,{quantity:q});}
-  async function del(id){sync('sync');await api('DELETE','/api/items/'+id);}
-  async function clearBought(){
-    if(!items.some(function(i){return i.bought;}))return;
-    sync('sync');await api('DELETE','/api/items/clear-bought');
-  }
-
-  async function api(method,url,body){
-    try{
-      var o={method:method,headers:{'Content-Type':'application/json'}};
-      if(body)o.body=JSON.stringify(body);
-      await fetch(url,o);await load();
-    }catch(e){sync('error');}
-  }
-
+// ── Form tag multi-toggle ──────────────────────────────
+function toggleFormTag(tag){
+  var idx=formTags.indexOf(tag);
+  if(idx>=0){ if(formTags.length>1) formTags.splice(idx,1); }
+  else formTags.push(tag);
   renderFormTags();
-  load();
-  setInterval(load,3000);
+}
+function renderFormTags(){
+  document.querySelectorAll('.tag-toggle').forEach(function(b){
+    var t=b.dataset.tag;
+    b.className='tag-toggle'+(formTags.indexOf(t)>=0?' on-'+t:'');
+  });
+}
+
+// ── Filter ─────────────────────────────────────────────
+function setF(f){
+  activeF=f;
+  document.querySelectorAll('.fchip').forEach(function(b){ b.classList.toggle('active',b.dataset.f===f); });
+  render();
+}
+
+// ── Fetch ──────────────────────────────────────────────
+async function load(){
+  try{
+    var r=await fetch('/api/items');
+    if(!r.ok)throw 0;
+    items=await r.json();
+    sync('ok'); render();
+  }catch(e){ sync('error'); }
+}
+
+// ── Render list ────────────────────────────────────────
+function render(){
+  var fil=activeF==='all'?items:items.filter(function(i){return(i.tags||['Family']).indexOf(activeF)>=0;});
+  var pend=fil.filter(function(i){return !i.bought;});
+  var bght=fil.filter(function(i){return i.bought;});
+
+  document.getElementById('list-pending').innerHTML=
+    pend.length?pend.map(renderItem).join(''):
+    '<div class="empty"><div class="empty-icon">🌿</div><p>Список пуст!</p></div>';
+
+  var bs=document.getElementById('bs');
+  if(bght.length){ bs.style.display=''; document.getElementById('list-bought').innerHTML=bght.map(renderItem).join(''); }
+  else bs.style.display='none';
+
+  var t=fil.length,d=bght.length;
+  document.getElementById('stats').innerHTML=t?
+    '<div class="schip">Всего: <b>'+t+'</b></div>'+
+    '<div class="schip">Куплено: <b>'+d+'</b></div>'+
+    '<div class="schip">Осталось: <b>'+(t-d)+'</b></div>':'';
+}
+
+function renderItem(item){
+  var ed=editId===item.id;
+  var tags=item.tags||['Family'];
+  var nm=ed?
+    '<input class="iname-inp" id="ei'+item.id+'" value="'+esc(item.name)+'"'+
+    ' onblur="save('+item.id+')"'+
+    ' onkeydown="if(event.key===\'Enter\')save('+item.id+');if(event.key===\'Escape\')cancelEdit()">':
+    '<span class="iname" ondblclick="startEdit('+item.id+')">'+esc(item.name)+'</span>';
+
+  var badges=tags.map(function(t){
+    return '<span class="ibadge tag-'+t+'" onclick="openTagPopup(event,'+item.id+')">'+(LABELS[t]||t)+'</span>';
+  }).join('');
+
+  return '<div class="item'+(item.bought?' bought':'')+'" id="it'+item.id+'">'+
+    '<div class="cb" onclick="toggleB('+item.id+','+item.bought+')">'+
+    '<svg width="13" height="10" viewBox="0 0 13 10" fill="none">'+
+    '<path d="M1 5L4.5 8.5L12 1" stroke="white" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
+    nm+
+    '<div class="ibadges">'+badges+'</div>'+
+    '<div class="qty">'+
+    '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity-1)+')">−</button>'+
+    '<span class="qval">'+item.quantity+'</span>'+
+    '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity+1)+')">+</button>'+
+    '</div>'+
+    '<span class="iunit">'+esc(item.unit||'')+'</span>'+
+    '<button class="del" onclick="del('+item.id+')">'+
+    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none">'+
+    '<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>'+
+    '</div>';
+}
+
+// ── Tag popup ──────────────────────────────────────────
+function openTagPopup(e, itemId){
+  e.stopPropagation();
+  var item=items.find(function(i){return i.id===itemId;});
+  if(!item)return;
+  tpItemId=itemId;
+  tpTags=(item.tags||['Family']).slice();
+  renderTpRows();
+  var rect=e.target.getBoundingClientRect();
+  var x=rect.left, y=rect.bottom+window.scrollY+6;
+  tagPopup.style.left=Math.min(x,window.innerWidth-180)+'px';
+  tagPopup.style.top=y+'px';
+  tagPopup.classList.add('open');
+}
+
+function renderTpRows(){
+  document.querySelectorAll('.tp-row').forEach(function(r){
+    var t=r.dataset.tag;
+    var on=tpTags.indexOf(t)>=0;
+    r.className='tp-row'+(on?' on-'+t:'');
+  });
+}
+
+async function tpToggle(tag){
+  var idx=tpTags.indexOf(tag);
+  if(idx>=0){ if(tpTags.length>1) tpTags.splice(idx,1); }
+  else tpTags.push(tag);
+  renderTpRows();
+  sync('sync');
+  await api('PATCH','/api/items/'+tpItemId,{tags:tpTags.slice()});
+}
+
+document.addEventListener('click',function(e){
+  if(tagPopup.classList.contains('open')&&!tagPopup.contains(e.target)){
+    tagPopup.classList.remove('open'); tpItemId=null;
+  }
+});
+
+// ── Preset modal ───────────────────────────────────────
+function openPreset(){
+  presetSelected={};
+  mfActive='all';
+  document.querySelectorAll('.mf-chip').forEach(function(b){b.classList.toggle('active',b.dataset.mf==='all');});
+  renderPresetList();
+  document.getElementById('presetOverlay').classList.add('open');
+}
+function closePreset(){ document.getElementById('presetOverlay').classList.remove('open'); }
+function maybeClosePreset(e){ if(e.target===document.getElementById('presetOverlay')) closePreset(); }
+
+function setMF(f){
+  mfActive=f;
+  document.querySelectorAll('.mf-chip').forEach(function(b){b.classList.toggle('active',b.dataset.mf===f);});
+  renderPresetList();
+}
+
+function renderPresetList(){
+  var html='';
+  var count=Object.keys(presetSelected).length;
+  PRESET.forEach(function(cat){
+    var filtered=cat.items.filter(function(it){
+      if(mfActive==='all') return true;
+      return it.tags.indexOf(mfActive)>=0;
+    });
+    if(!filtered.length) return;
+    html+='<div class="preset-cat">'+cat.cat+'</div>';
+    filtered.forEach(function(it){
+      var key=cat.cat+'||'+it.name;
+      var sel=!!presetSelected[key];
+      html+='<div class="preset-row'+(sel?' selected':'')+'" onclick="togglePreset(\''+escAttr(key)+'\')" data-key="'+escAttr(key)+'">'+
+        '<div class="preset-check"></div>'+
+        '<span class="preset-name">'+esc(it.name)+'</span>'+
+        '<span class="preset-qty">'+esc(it.qty)+'</span>'+
+        '</div>';
+    });
+  });
+  document.getElementById('presetList').innerHTML=html;
+  document.getElementById('presetCount').textContent=count+' выбрано';
+  var btn=document.getElementById('btnAddSelected');
+  btn.disabled=count===0;
+  btn.textContent=count>0?'Добавить '+count+' товар'+(count===1?'':'а'):'Выберите товары';
+}
+
+function togglePreset(key){
+  if(presetSelected[key]) delete presetSelected[key];
+  else presetSelected[key]=true;
+  renderPresetList();
+}
+
+async function addSelected(){
+  var keys=Object.keys(presetSelected);
+  if(!keys.length) return;
+  var toAdd=[];
+  keys.forEach(function(key){
+    var parts=key.split('||');
+    var catName=parts[0], itemName=parts.slice(1).join('||');
+    PRESET.forEach(function(cat){
+      if(cat.cat!==catName) return;
+      cat.items.forEach(function(it){
+        if(it.name===itemName) toAdd.push({name:it.name,quantity:1,unit:it.qty,tags:it.tags.slice()});
+      });
+    });
+  });
+  sync('sync');
+  try{
+    var r=await fetch('/api/items/bulk',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(toAdd)});
+    if(!r.ok)throw 0;
+    items=await r.json();
+    sync('ok'); render();
+    closePreset();
+  }catch(e){ sync('error'); }
+}
+
+// ── Actions ────────────────────────────────────────────
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escAttr(s){return String(s).replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
+function startEdit(id){editId=id;render();setTimeout(function(){var e=document.getElementById('ei'+id);if(e)e.focus();},10);}
+function cancelEdit(){editId=null;render();}
+async function save(id){
+  var e=document.getElementById('ei'+id);if(!e)return;
+  var n=e.value.trim();if(!n){cancelEdit();return;}
+  editId=null;await api('PATCH','/api/items/'+id,{name:n});
+}
+
+async function addItem(){
+  var name=document.getElementById('newName').value.trim();
+  var qty=parseInt(document.getElementById('newQty').value)||1;
+  var unit=document.getElementById('newUnit').value.trim();
+  if(!name)return; sync('sync');
+  await api('POST','/api/items',{name:name,quantity:qty,unit:unit,tags:formTags.slice()});
+  document.getElementById('newName').value='';
+  document.getElementById('newQty').value='1';
+  document.getElementById('newUnit').value='';
+  document.getElementById('newName').focus();
+}
+
+async function toggleB(id,cur){sync('sync');await api('PATCH','/api/items/'+id,{bought:!cur});}
+async function chQty(id,q){if(q<1)return;sync('sync');await api('PATCH','/api/items/'+id,{quantity:q});}
+async function del(id){sync('sync');await api('DELETE','/api/items/'+id);}
+
+async function clearBought(){
+  if(!items.some(function(i){return i.bought;}))return;
+  sync('sync');await api('DELETE','/api/items/clear-bought');
+}
+
+async function uncheckAll(){
+  if(!items.some(function(i){return i.bought;}))return;
+  sync('sync');
+  try{
+    await fetch('/api/items/uncheck-all',{method:'POST'});
+    await load();
+  }catch(e){sync('error');}
+}
+
+async function api(method,url,body){
+  try{
+    var o={method:method,headers:{'Content-Type':'application/json'}};
+    if(body)o.body=JSON.stringify(body);
+    await fetch(url,o); await load();
+  }catch(e){sync('error');}
+}
+
+renderFormTags();
+load();
+setInterval(load,3000);
 </script>
 </body>
 </html>
