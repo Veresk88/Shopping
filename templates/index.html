@@ -281,23 +281,26 @@
       display:flex;align-items:center;justify-content:center;
       background:rgba(255,255,255,.52);
       transition:border-color .15s,background .15s,box-shadow .15s;
+      align-self:flex-start; margin-top:2px;
     }
     .cb:hover { border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim); }
     .item.bought .cb { background:var(--accent);border-color:var(--accent);box-shadow:0 2px 8px rgba(58,125,90,.32); }
     .cb svg { display:none; }
     .item.bought .cb svg { display:block; }
 
-    .iname { flex:1;font-size:15.5px;font-weight:400;color:var(--t1);min-width:0;word-break:break-word; }
+    /* Name + tags stacked vertically */
+    .iinfo { flex:1; min-width:0; display:flex; flex-direction:column; gap:5px; }
+    .iname { font-size:15.5px;font-weight:400;color:var(--t1);word-break:break-word; }
     .item.bought .iname { text-decoration:line-through;color:var(--t3); }
     .iname-inp {
       background:transparent;border:none;border-bottom:1.5px solid var(--accent);
       color:var(--t1);font-size:15.5px;outline:none;width:100%;padding:1px 2px;
     }
 
-    /* Inline tag editor on item */
-    .ibadges { display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;max-width:110px;align-items:center; }
+    /* Tags under the name */
+    .ibadges { display:flex;gap:4px;flex-wrap:wrap; }
     .ibadge {
-      font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:10px;
+      font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;
       letter-spacing:.2px;cursor:pointer;border:1.5px solid transparent;
       transition:all .15s;white-space:nowrap;
     }
@@ -305,6 +308,9 @@
     .ibadge.tag-Family { background:rgba(0,0,0,.06);color:var(--t2);border-color:rgba(0,0,0,.10); }
     .ibadge.tag-YA     { background:var(--accent-dim);color:var(--accent);border-color:rgba(58,125,90,.25); }
     .ibadge.tag-VA     { background:var(--amber-dim);color:var(--amber);border-color:rgba(160,116,40,.25); }
+
+    /* Right side controls */
+    .iright { display:flex;align-items:center;gap:6px;flex-shrink:0; }
 
     /* Tag popup */
     .tag-popup {
@@ -613,17 +619,22 @@ function renderItem(item){
     '<div class="cb" onclick="toggleB('+item.id+','+item.bought+')">'+
     '<svg width="13" height="10" viewBox="0 0 13 10" fill="none">'+
     '<path d="M1 5L4.5 8.5L12 1" stroke="white" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
-    nm+
-    '<div class="ibadges">'+badges+'</div>'+
-    '<div class="qty">'+
-    '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity-1)+')">−</button>'+
-    '<span class="qval">'+item.quantity+'</span>'+
-    '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity+1)+')">+</button>'+
+    '<div class="iinfo">'+
+      nm+
+      '<div class="ibadges">'+badges+'</div>'+
     '</div>'+
-    '<span class="iunit">'+esc(item.unit||'')+'</span>'+
-    '<button class="del" onclick="del('+item.id+')">'+
-    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none">'+
-    '<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>'+
+    '<div class="iright">'+
+      '<div class="qty">'+
+        '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity-1)+')">−</button>'+
+        '<span class="qval">'+item.quantity+'</span>'+
+        '<button class="qbtn" onclick="chQty('+item.id+','+(item.quantity+1)+')">+</button>'+
+      '</div>'+
+      '<span class="iunit">'+esc(item.unit||'')+'</span>'+
+      '<button class="del" onclick="del('+item.id+')">'+
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none">'+
+        '<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'+
+      '</button>'+
+    '</div>'+
     '</div>';
 }
 
